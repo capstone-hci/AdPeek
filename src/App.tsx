@@ -1,5 +1,8 @@
+import { RouterProvider } from 'react-router-dom';
+import router from '@app/routes/router';
+
 function App() {
-  return <div className="text-black-500 text-2xl">App</div>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

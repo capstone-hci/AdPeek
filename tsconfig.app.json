@@ -22,6 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path Alias */
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],

@@ -35,6 +35,8 @@ export function useGazer() {
   }, []);
 
   const end = useCallback(() => {
+    // 초기화되지 않은 상태면 무시 (StrictMode 이중 cleanup 방지)
+    if (!isInitialized.current) return;
     destroyWebGazer();
 
     // 초기화 플래그 리셋

@@ -1,5 +1,3 @@
-import type { GazeListener } from '@shared/types/webgazer';
-
 export interface WebGazerInitOptions {
   onGaze?: GazeListener;
   showVideo?: boolean;
@@ -9,10 +7,6 @@ export interface WebGazerInitOptions {
 }
 
 export function initWebGazer(options: WebGazerInitOptions = {}): void {
-  if (!window.webgazer) {
-    throw new Error('[WebGazer] window.webgazer를 찾을 수 없습니다.');
-  }
-
   const {
     onGaze,
     showVideo = false,
@@ -36,6 +30,11 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
 
 export function destroyWebGazer(): void {
   if (!window.webgazer) return;
-  window.webgazer.clearGazeListener();
-  window.webgazer.end();
+  try {
+    window.webgazer.clearGazeListener();
+    window.webgazer.end();
+  } catch (e) {
+    console.warn('webgazer 종료 중 오류:', e);
+    alert('webgazer 종료 중 오류:');
+  }
 }

@@ -10,6 +10,7 @@ export default function StartPage() {
         minHeight: '100vh',
         background: 'var(--bg)',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         animation: 'fadeIn 0.5s ease',
@@ -17,19 +18,21 @@ export default function StartPage() {
     >
       <div
         style={{
-          padding: '40px 48px',
-          maxWidth: 1280,
-          margin: '0 auto',
-          width: '100%',
+          boxSizing: 'border-box',
+          width: 'min(100%, 1120px)',
+          padding: '28px 32px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
         <span
           style={{
             display: 'inline-block',
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.08em',
-            padding: '6px 12px',
+            padding: '5px 10px',
             borderRadius: 999,
             background: 'var(--accent-soft)',
             color: 'var(--accent)',
@@ -40,12 +43,13 @@ export default function StartPage() {
 
         <h1
           style={{
-            fontSize: 56,
+            width: '100%',
+            fontSize: 50,
             fontWeight: 800,
             letterSpacing: '-0.04em',
             lineHeight: 1.15,
-            marginTop: 20,
-            marginBottom: 18,
+            marginTop: 14,
+            marginBottom: 12,
             textAlign: 'center',
           }}
         >
@@ -56,11 +60,12 @@ export default function StartPage() {
 
         <p
           style={{
+            width: '100%',
             color: 'var(--text2)',
-            fontSize: 17,
-            lineHeight: 1.7,
-            marginBottom: 56,
-            maxWidth: 560,
+            fontSize: 15,
+            lineHeight: 1.65,
+            marginBottom: 36,
+            maxWidth: 480,
             marginLeft: 'auto',
             marginRight: 'auto',
             textAlign: 'center',
@@ -70,7 +75,7 @@ export default function StartPage() {
           이끌어냈는지 <br /> 정량적으로 분석합니다.
         </p>
 
-        <div className="screen-start-grid">
+        <div className="mx-auto grid w-full max-w-[800px] grid-cols-1 gap-4 md:grid-cols-2">
           <button
             type="button"
             onClick={() => navigate(paths.participantConsent)}
@@ -84,8 +89,8 @@ export default function StartPage() {
             }}
             style={{
               background: 'var(--surface)',
-              borderRadius: 20,
-              padding: 32,
+              borderRadius: 16,
+              padding: 24,
               textAlign: 'left',
               boxShadow: 'var(--shadow-xs)',
               outline: '1px solid var(--border)',
@@ -96,17 +101,17 @@ export default function StartPage() {
           >
             <div
               style={{
-                width: 48,
-                height: 48,
-                borderRadius: 14,
+                width: 40,
+                height: 40,
+                borderRadius: 12,
                 background: 'var(--accent-soft)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <circle
                   cx="12"
                   cy="9"
@@ -125,11 +130,11 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: 700,
                 color: 'var(--accent)',
                 letterSpacing: '0.06em',
-                marginBottom: 6,
+                marginBottom: 5,
               }}
             >
               실험 참여자
@@ -137,10 +142,10 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: 700,
                 letterSpacing: '-0.03em',
-                marginBottom: 8,
+                marginBottom: 6,
               }}
             >
               광고를 시청하고
@@ -150,10 +155,10 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 14,
+                fontSize: 13,
                 color: 'var(--text3)',
-                lineHeight: 1.6,
-                marginBottom: 24,
+                lineHeight: 1.55,
+                marginBottom: 18,
               }}
             >
               Muse 헤드밴드 착용 후 시작하세요.
@@ -163,14 +168,14 @@ export default function StartPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
-                fontSize: 14,
+                gap: 5,
+                fontSize: 13,
                 fontWeight: 600,
                 color: 'var(--accent)',
               }}
             >
               참여 시작하기
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M3 7H11M11 7L7 3M11 7L7 11"
                   stroke="currentColor"
@@ -195,8 +200,8 @@ export default function StartPage() {
             }}
             style={{
               background: '#191f28',
-              borderRadius: 20,
-              padding: 32,
+              borderRadius: 16,
+              padding: 24,
               textAlign: 'left',
               boxShadow: 'var(--shadow-xs)',
               cursor: 'pointer',
@@ -207,17 +212,17 @@ export default function StartPage() {
           >
             <div
               style={{
-                width: 48,
-                height: 48,
-                borderRadius: 14,
+                width: 40,
+                height: 40,
+                borderRadius: 12,
                 background: 'rgba(255,255,255,0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
                 <rect
                   x="2"
                   y="3"
@@ -239,11 +244,11 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: 700,
                 color: '#7ea7ff',
                 letterSpacing: '0.06em',
-                marginBottom: 6,
+                marginBottom: 5,
               }}
             >
               마케터 · 분석가
@@ -251,10 +256,10 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: 700,
                 letterSpacing: '-0.03em',
-                marginBottom: 8,
+                marginBottom: 6,
               }}
             >
               참여자 결과를 모아
@@ -264,10 +269,10 @@ export default function StartPage() {
 
             <div
               style={{
-                fontSize: 14,
+                fontSize: 13,
                 color: 'rgba(255,255,255,0.65)',
-                lineHeight: 1.6,
-                marginBottom: 24,
+                lineHeight: 1.55,
+                marginBottom: 18,
               }}
             >
               광고별 시선 히트맵, EEG 타임라인, 회상률·구매 의향을 통합
@@ -278,14 +283,14 @@ export default function StartPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
-                fontSize: 14,
+                gap: 5,
+                fontSize: 13,
                 fontWeight: 600,
                 color: '#7ea7ff',
               }}
             >
               대시보드 바로가기
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M3 7H11M11 7L7 3M11 7L7 11"
                   stroke="currentColor"
@@ -298,7 +303,16 @@ export default function StartPage() {
           </button>
         </div>
 
-        <div style={{ marginTop: 56, display: 'flex', gap: 40 }}>
+        <div
+          style={{
+            marginTop: 36,
+            display: 'flex',
+            gap: 28,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            width: '100%',
+          }}
+        >
           {[
             ['12명', '누적 참여자'],
             ['3편', '분석 광고'],
@@ -307,7 +321,7 @@ export default function StartPage() {
             <div key={l} style={{ textAlign: 'center' }}>
               <div
                 style={{
-                  fontSize: 26,
+                  fontSize: 22,
                   fontWeight: 800,
                   color: 'var(--text)',
                   letterSpacing: '-0.03em',
@@ -317,7 +331,7 @@ export default function StartPage() {
               </div>
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text3)',
                   marginTop: 2,
                   fontWeight: 500,

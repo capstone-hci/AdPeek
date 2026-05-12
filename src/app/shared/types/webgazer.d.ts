@@ -1,14 +1,13 @@
-export interface GazeData {
+// window.webgazer 전역 타입 선언
+
+interface GazeData {
   x: number;
   y: number;
 }
 
-export type GazeListener = (data: GazeData | null, elapsedTime: number) => void;
+type GazeListener = (data: GazeData | null, elapsedTime: number) => void;
 
-export type RegressionType = 'ridge' | 'weightedRidge' | 'threadedRidge';
-export type TrackerType = 'TFFacemesh';
-
-export interface WebGazerInstance {
+interface WebGazerInstance {
   begin(): Promise<WebGazerInstance>;
   end(): void;
   pause(): WebGazerInstance;
@@ -16,8 +15,10 @@ export interface WebGazerInstance {
   setGazeListener(listener: GazeListener | null): WebGazerInstance;
   clearGazeListener(): WebGazerInstance;
   getCurrentPrediction(): Promise<GazeData | null>;
-  setRegression(type: RegressionType): WebGazerInstance;
-  setTracker(type: TrackerType): WebGazerInstance;
+  setRegression(
+    type: 'ridge' | 'weightedRidge' | 'threadedRidge'
+  ): WebGazerInstance;
+  setTracker(type: 'TFFacemesh'): WebGazerInstance;
   recordScreenPosition(x: number, y: number, type?: string): void;
   clearData(): void;
   showVideoPreview(show: boolean): WebGazerInstance;
@@ -27,8 +28,6 @@ export interface WebGazerInstance {
   isReady(): boolean;
 }
 
-declare global {
-  interface Window {
-    webgazer: WebGazerInstance;
-  }
+interface Window {
+  webgazer: WebGazerInstance;
 }

@@ -22,18 +22,16 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path Alias */
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@data/*": ["src/data/*"],
-      "@layout/*": ["src/app/layout/*"],
-      "@pages/*": ["src/app/pages/*"],
-      "@routes/*": ["src/app/routes/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@process/*": ["src/data/process/*"],
-      "@sync/*": ["src/data/sync/*"],
-      "@visualization/*": ["src/data/visualization/*"]
+      "@app/*": ["./src/app/*"],
+      "@data/*": ["./src/data/*"],
+      "@layout/*": ["./src/app/layout/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@routes/*": ["./src/app/routes/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@process/*": ["./src/data/process/*"],
+      "@sync/*": ["./src/data/sync/*"],
+      "@visualization/*": ["./src/data/visualization/*"]
     }
   },
   "include": ["src"]

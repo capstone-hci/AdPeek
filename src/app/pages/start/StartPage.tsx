@@ -78,7 +78,7 @@ export default function StartPage() {
         <div className="mx-auto grid w-full max-w-[800px] grid-cols-1 gap-4 md:grid-cols-2">
           <button
             type="button"
-            onClick={() => navigate(paths.participantConsent)}
+            onClick={() => navigate(paths.consent)}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
               e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
@@ -189,7 +189,7 @@ export default function StartPage() {
 
           <button
             type="button"
-            onClick={() => navigate(paths.marketerDashboard)}
+            onClick={() => navigate(paths.dashboard)}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-3px)';
               e.currentTarget.style.boxShadow = 'var(--shadow-lg)';

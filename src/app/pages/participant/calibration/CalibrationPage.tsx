@@ -48,6 +48,6 @@ export default function CalibrationPage() {
   }
 
   return (
-    <Complete onPrev={() => setSubStep(1)} onFinish={goNextExperimentStep} />
+    <Complete onRetry={() => setSubStep(1)} onNext={goNextExperimentStep} />
   );
 }

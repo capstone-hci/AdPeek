@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@app/layout/RootLayout';
 import HomePage from '@app/pages/home/HomePage';
 import StartPage from '@app/pages/start/StartPage';
+import ConsentPage from '@app/pages/participant/consent/ConsentPage';
+import CalibrationPage from '@app/pages/participant/calibration/CalibrationPage';
 import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
       {
         path: paths.start,
         element: <StartPage />,
+      },
+      {
+        path: paths.consent,
+        element: <ConsentPage />,
+      },
+      {
+        path: paths.calibration,
+        element: <CalibrationPage />,
       },
     ],
   },

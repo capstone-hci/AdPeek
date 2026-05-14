@@ -4,11 +4,13 @@ import { paths } from '@app/routes/path';
 import CheckBox from './components/CheckBox';
 
 type AgreementKey = 'privacy' | 'biometric' | 'research';
+type Gender = 'male' | 'female';
 
 const ConsentPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+  const [gender, setGender] = useState<Gender | null>(null);
   const [agreements, setAgreements] = useState<Record<AgreementKey, boolean>>({
     privacy: false,
     biometric: false,
@@ -18,7 +20,8 @@ const ConsentPage = () => {
   const allChecked =
     agreements.privacy && agreements.biometric && agreements.research;
 
-  const isValid = name.trim() !== '' && age.trim() !== '' && allChecked;
+  const isValid =
+    name.trim() !== '' && age.trim() !== '' && gender !== null && allChecked;
 
   const toggleAgreement = (key: AgreementKey) => {
     setAgreements((prev) => ({
@@ -228,6 +231,55 @@ const ConsentPage = () => {
                 />
               </div>
             </div>
+
+            <div style={{ marginTop: 16 }}>
+              <span
+                style={{
+                  fontSize: 12,
+                  color: 'var(--text3)',
+                  fontWeight: 500,
+                  display: 'block',
+                  marginBottom: 8,
+                }}
+              >
+                성별
+              </span>
+              <div style={{ display: 'flex', gap: 10, width: '50%' }}>
+                {(
+                  [
+                    ['male', '남성'],
+                    ['female', '여성'],
+                  ] as const
+                ).map(([value, label]) => {
+                  const selected = gender === value;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setGender(value)}
+                      style={{
+                        flex: 1,
+                        padding: '10px 14px',
+                        borderRadius: 8,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        border: selected
+                          ? '1.5px solid var(--accent)'
+                          : '1.5px solid var(--border)',
+                        background: selected
+                          ? 'var(--accent-soft)'
+                          : 'var(--bg)',
+                        color: selected ? 'var(--accent)' : 'var(--text2)',
+                        transition: 'border 0.15s ease, background 0.15s ease',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <div
@@ -266,7 +318,7 @@ const ConsentPage = () => {
                   [
                     'privacy',
                     '개인정보 수집·이용 동의 (필수)',
-                    '성명, 나이 등 식별 정보 수집',
+                    '성명, 나이, 성별 등 식별 정보 수집',
                   ],
                   [
                     'biometric',
@@ -336,9 +388,14 @@ const ConsentPage = () => {
                 type="button"
                 disabled={!isValid}
                 onClick={() => {
-                  if (!isValid) return;
+                  if (!isValid || gender === null) return;
                   navigate(paths.calibration, {
-                    state: { name, age, agreements },
+                    state: {
+                      name,
+                      age,
+                      gender,
+                      agreements,
+                    },
                   });
                 }}
                 style={{

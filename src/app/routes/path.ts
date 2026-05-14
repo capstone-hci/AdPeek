@@ -1,6 +1,7 @@
 export const paths = {
   home: '/',
   start: '/start',
-  participantConsent: '/participant/consent',
-  marketerDashboard: '/marketer/dashboard',
+  consent: '/participant/step1',
+  calibration: '/participant/step2',
+  dashboard: '/marketer/dashboard',
 } as const;

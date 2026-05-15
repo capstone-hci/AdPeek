@@ -26,12 +26,9 @@ type CalibrationViewProps = {
   areaRef: RefObject<HTMLDivElement | null>;
 };
 
-function CalibrationView({
-  gaze,
-  currentIndex,
-  onPrev,
-  areaRef,
-}: CalibrationViewProps) {
+const CalibrationView = (props: CalibrationViewProps) => {
+  const { gaze, currentIndex, onPrev, areaRef } = props;
+
   return (
     <div
       style={{
@@ -257,13 +254,14 @@ function CalibrationView({
       </div>
     </div>
   );
-}
+};
 
 /**
  * WebGazer 등 실제 시선 연동 시: 아래 블록만 제거·교체하면 됩니다.
  * (`useSimulatedPointerGaze` → 실측 훅 + 동일한 `gaze` / `currentIndex` 형태 권장)
  */
-export default function Calibration({ onPrev, onComplete }: CalibrationProps) {
+const Calibration = (props: CalibrationProps) => {
+  const { onPrev, onComplete } = props;
   const calibrationAreaRef = useRef<HTMLDivElement>(null);
 
   const { gaze, currentIndex } = useSimulatedPointerGaze(
@@ -280,4 +278,6 @@ export default function Calibration({ onPrev, onComplete }: CalibrationProps) {
       areaRef={calibrationAreaRef}
     />
   );
-}
+};
+
+export default Calibration;

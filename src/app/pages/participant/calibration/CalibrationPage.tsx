@@ -19,7 +19,7 @@ type ParticipantConsentState = {
 /** Step 2 내부: 안내 → 캘리브레이션 → 완료 */
 type CalibrationSubStep = 0 | 1 | 2;
 
-export default function CalibrationPage() {
+const CalibrationPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const participant = state as ParticipantConsentState | null;
@@ -50,4 +50,6 @@ export default function CalibrationPage() {
   return (
     <Complete onRetry={() => setSubStep(1)} onNext={goNextExperimentStep} />
   );
-}
+};
+
+export default CalibrationPage;

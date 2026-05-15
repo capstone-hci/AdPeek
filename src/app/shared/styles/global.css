@@ -14,11 +14,14 @@
   --text3: #8b95a1;
   --surface: #ffffff;
   --border: rgba(25, 31, 40, 0.1);
+  --border2: rgba(25, 31, 40, 0.08);
   --accent: #3182f6;
   --accent-soft: rgba(49, 130, 246, 0.12);
   --shadow-xs: 0 1px 3px rgba(25, 31, 40, 0.08);
   --shadow-lg: 0 16px 48px rgba(25, 31, 40, 0.14);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --success: #12b76a;
+  --danger: #f04452;
 }
 
 @keyframes fadeIn {
@@ -27,6 +30,18 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.12;
+    transform: scale(1.12);
   }
 }
 

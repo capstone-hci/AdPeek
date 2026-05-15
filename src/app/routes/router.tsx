@@ -4,9 +4,10 @@ import HomePage from '@app/pages/home/HomePage';
 import StartPage from '@app/pages/start/StartPage';
 import ConsentPage from '@app/pages/participant/consent/ConsentPage';
 import CalibrationPage from '@app/pages/participant/calibration/CalibrationPage';
-import { paths } from '@app/routes/path';
 import ConnectionPage from '@app/pages/participant/connection/ConnectionPage';
 import ReadyPage from '@app/pages/participant/ready/ReadyPage';
+import ViewPage from '@app/pages/participant/view/ViewPage';
+import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: paths.ready,
         element: <ReadyPage />,
+      },
+      {
+        path: paths.view,
+        element: <ViewPage />,
       },
     ],
   },

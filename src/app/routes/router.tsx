@@ -6,6 +6,7 @@ import ConsentPage from '@app/pages/participant/consent/ConsentPage';
 import CalibrationPage from '@app/pages/participant/calibration/CalibrationPage';
 import { paths } from '@app/routes/path';
 import ConnectionPage from '@app/pages/participant/connection/ConnectionPage';
+import ReadyPage from '@app/pages/participant/ready/ReadyPage';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: paths.connection,
         element: <ConnectionPage />,
+      },
+      {
+        path: paths.ready,
+        element: <ReadyPage />,
       },
     ],
   },

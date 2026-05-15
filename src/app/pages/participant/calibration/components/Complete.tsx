@@ -3,7 +3,9 @@ type CompleteProps = {
   onNext: () => void;
 };
 
-export default function Complete({ onRetry, onNext }: CompleteProps) {
+const Complete = (props: CompleteProps) => {
+  const { onRetry, onNext } = props;
+
   return (
     <div
       style={{
@@ -140,4 +142,6 @@ export default function Complete({ onRetry, onNext }: CompleteProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Complete;

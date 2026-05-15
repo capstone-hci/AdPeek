@@ -10,7 +10,9 @@ const TIPS: [string, string][] = [
   ['4', '각 점은 약 2초간 응시'],
 ];
 
-export default function Intro({ onPrev, onStart }: IntroProps) {
+const Intro = (props: IntroProps) => {
+  const { onPrev, onStart } = props;
+
   return (
     <div
       style={{
@@ -226,4 +228,6 @@ export default function Intro({ onPrev, onStart }: IntroProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Intro;

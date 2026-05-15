@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@app/routes/path';
 
-export default function StartPage() {
+const StartPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -345,4 +345,6 @@ export default function StartPage() {
       </div>
     </div>
   );
-}
+};
+
+export default StartPage;

@@ -49,7 +49,7 @@ const ConnectionPage = () => {
           <ConnectionActions
             isConnected={isConnected}
             onPrev={() => navigate(paths.calibration)}
-            onNext={() => navigate(paths.home)}
+            onNext={() => navigate(paths.ready)}
           />
         </div>
       </div>

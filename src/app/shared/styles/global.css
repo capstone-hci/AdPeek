@@ -17,6 +17,10 @@
   --border2: rgba(25, 31, 40, 0.08);
   --accent: #3182f6;
   --accent-soft: rgba(49, 130, 246, 0.12);
+  --accent2: #7c5cbf;
+  --accent2-soft: rgba(124, 92, 191, 0.12);
+  --bg2: #eceef1;
+  --text4: #b0b8c1;
   --shadow-xs: 0 1px 3px rgba(25, 31, 40, 0.08);
   --shadow-lg: 0 16px 48px rgba(25, 31, 40, 0.14);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);

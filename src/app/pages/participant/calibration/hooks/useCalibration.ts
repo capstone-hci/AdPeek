@@ -1,15 +1,27 @@
-import { useState, useRef, useCallback } from 'react';
-import { beginWebGazer, initWebGazer } from '@shared/utils/webgazerInit';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type RefObject,
+} from 'react';
+import {
+  beginWebGazer,
+  destroyWebGazer,
+  initWebGazer,
+} from '@shared/utils/webgazerInit';
 import type {
-  CalibrationStatus,
   CalibrationPoint,
   CalibrationResult,
+  CalibrationStatus,
   ValidationPoint,
 } from '../types/calibration.types';
 import {
   CALIBRATION_POINTS,
   VALIDATION_POINTS,
+  RECORD_INTERVAL_MS,
   SAMPLES_PER_POINT,
+  POINT_TRANSITION_MS,
   SETTLE_TIME_MS,
   SAMPLING_DURATION_MS,
   ACCURACY_THRESHOLD,
@@ -24,10 +36,11 @@ export interface UseCalibrationReturn {
   totalPoints: number;
   currentCalibrationPoint: CalibrationPoint | null;
   currentValidationPoint: CalibrationPoint | null;
+  gazeData: { x: number; y: number } | null; // WebGazer 예측 좌표 (픽셀)
+  recordProgress: number; // 0–1, 현재 포인트 기록 진행률
   validationProgress: number; // 0–1
   result: CalibrationResult | null;
   start: () => Promise<void>;
-  handleClick: (x: number, y: number) => void;
   retry: () => void;
 }
 
@@ -35,56 +48,83 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function useCalibration(): UseCalibrationReturn {
+/**
+ * areaRef: 캘리브레이션 영역 DOM 요소.
+ * 제공 시 해당 요소 기준 실제 픽셀 좌표로 학습 데이터 기록.
+ * 미제공 시 window 전체 기준.
+ */
+export function useCalibration(
+  areaRef?: RefObject<HTMLElement | null>
+): UseCalibrationReturn {
   const [status, setStatus] = useState<CalibrationStatus>('idle');
   const [currentPointIndex, setCurrentPointIndex] = useState(0);
   const [currentPointSamples, setCurrentPointSamples] = useState(0);
   const [currentValidationIndex, setCurrentValidationIndex] = useState(0);
+  const [gazeData, setGazeData] = useState<{ x: number; y: number } | null>(
+    null
+  );
   const [result, setResult] = useState<CalibrationResult | null>(null);
 
   const statusRef = useRef<CalibrationStatus>('idle');
-  const sampleCountRef = useRef(0);
-  const pointIndexRef = useRef(0);
+  const gazeRef = useRef<{ x: number; y: number } | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isInitialized = useRef(false);
+
+  // startPointRecording이 자기 자신을 setTimeout으로 재귀 호출하므로 ref로 관리
+  const startPointRecordingRef = useRef<(index: number) => void>(() => {});
 
   const setStatusSync = useCallback((s: CalibrationStatus) => {
     statusRef.current = s;
     setStatus(s);
   }, []);
 
-  const reset = useCallback(() => {
-    setStatusSync('idle');
-    setCurrentPointIndex(0);
-    setCurrentPointSamples(0);
-    setCurrentValidationIndex(0);
-    setResult(null);
-    sampleCountRef.current = 0;
-    pointIndexRef.current = 0;
-  }, [setStatusSync]);
+  const clearRecordInterval = useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
 
+  // areaRef가 있으면 실제 화면 픽셀 좌표, 없으면 window 전체 기준
+  const getTargetPixel = useCallback(
+    (nx: number, ny: number): { x: number; y: number } => {
+      const el = areaRef?.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        return {
+          x: Math.round(rect.left + nx * rect.width),
+          y: Math.round(rect.top + ny * rect.height),
+        };
+      }
+      return {
+        x: Math.round(nx * window.innerWidth),
+        y: Math.round(ny * window.innerHeight),
+      };
+    },
+    [areaRef]
+  );
+
+  // 검증: 각 포인트에서 눈 고정 후 gazeRef 샘플 수집
   const runValidation = useCallback(async () => {
     setStatusSync('validating');
     const validationResults: ValidationPoint[] = [];
 
     for (let i = 0; i < VALIDATION_POINTS.length; i++) {
-      const vp = VALIDATION_POINTS[i];
       setCurrentValidationIndex(i);
-
-      // 눈이 포인트에 고정될 때까지 대기
       await sleep(SETTLE_TIME_MS);
 
-      // SAMPLING_DURATION_MS 동안 시선 예측 수집
       const samples: Array<{ x: number; y: number }> = [];
       await new Promise<void>((resolve) => {
-        window.webgazer.setGazeListener((data) => {
-          if (data) samples.push({ x: data.x, y: data.y });
-        });
+        const sampleInterval = setInterval(() => {
+          if (gazeRef.current) samples.push({ ...gazeRef.current });
+        }, 50);
         setTimeout(() => {
-          window.webgazer.clearGazeListener();
+          clearInterval(sampleInterval);
           resolve();
         }, SAMPLING_DURATION_MS);
       });
 
-      validationResults.push({ ...vp, predictions: samples });
+      validationResults.push({ ...VALIDATION_POINTS[i], predictions: samples });
     }
 
     const computed = computeAccuracy(validationResults, MAX_ERROR_PX);
@@ -92,44 +132,89 @@ export function useCalibration(): UseCalibrationReturn {
     setStatusSync(computed.accuracy >= ACCURACY_THRESHOLD ? 'done' : 'failed');
   }, [setStatusSync]);
 
-  const start = useCallback(async () => {
-    reset();
-    // 세션 간 학습 데이터 유지 + Kalman은 검증 후 수집 단계에서 켬
-    initWebGazer({ saveDataAcrossSessions: true, applyKalmanFilter: false });
-    await beginWebGazer();
-    setStatusSync('calibrating');
-  }, [reset, setStatusSync]);
+  // 포인트별 자동 기록: 예측 없어도 학습 데이터 쌓임
+  const startPointRecording = useCallback(
+    (pointIndex: number) => {
+      clearRecordInterval();
+      setCurrentPointIndex(pointIndex);
+      setCurrentPointSamples(0);
 
-  const handleClick = useCallback(
-    (x: number, y: number) => {
-      if (statusRef.current !== 'calibrating') return;
+      const point = CALIBRATION_POINTS[pointIndex];
+      if (!point) return;
 
-      // WebGazer 회귀 모델 학습
-      window.webgazer.recordScreenPosition(x, y, 'click');
+      const { x, y } = getTargetPixel(point.nx, point.ny);
+      let count = 0;
 
-      sampleCountRef.current += 1;
-      setCurrentPointSamples(sampleCountRef.current);
+      intervalRef.current = setInterval(() => {
+        window.webgazer.recordScreenPosition(x, y, 'click');
+        count += 1;
+        setCurrentPointSamples(count);
 
-      if (sampleCountRef.current >= SAMPLES_PER_POINT) {
-        const nextIndex = pointIndexRef.current + 1;
-        pointIndexRef.current = nextIndex;
+        if (count >= SAMPLES_PER_POINT) {
+          clearRecordInterval();
+          const nextIndex = pointIndex + 1;
 
-        if (nextIndex >= CALIBRATION_POINTS.length) {
-          runValidation();
-        } else {
-          sampleCountRef.current = 0;
-          setCurrentPointSamples(0);
-          setCurrentPointIndex(nextIndex);
+          if (nextIndex >= CALIBRATION_POINTS.length) {
+            runValidation();
+          } else {
+            setTimeout(
+              () => startPointRecordingRef.current(nextIndex),
+              POINT_TRANSITION_MS
+            );
+          }
         }
-      }
+      }, RECORD_INTERVAL_MS);
     },
-    [runValidation]
+    [clearRecordInterval, getTargetPixel, runValidation]
   );
 
+  useEffect(() => {
+    startPointRecordingRef.current = startPointRecording;
+  }, [startPointRecording]);
+
+  const start = useCallback(async () => {
+    if (isInitialized.current) return;
+    isInitialized.current = true;
+
+    clearRecordInterval();
+    gazeRef.current = null;
+    setStatusSync('idle');
+    setCurrentPointIndex(0);
+    setCurrentPointSamples(0);
+    setCurrentValidationIndex(0);
+    setGazeData(null);
+    setResult(null);
+
+    initWebGazer({
+      showVideo: true,
+      saveDataAcrossSessions: true,
+      applyKalmanFilter: false,
+      onGaze: (data) => {
+        if (!data) return;
+        gazeRef.current = { x: data.x, y: data.y };
+        setGazeData({ x: data.x, y: data.y });
+      },
+    });
+
+    await beginWebGazer();
+    setStatusSync('calibrating');
+    startPointRecordingRef.current(0);
+  }, [clearRecordInterval, setStatusSync]);
+
   const retry = useCallback(() => {
+    clearRecordInterval();
+    isInitialized.current = false;
     window.webgazer.clearData();
-    reset();
-  }, [reset]);
+    start();
+  }, [clearRecordInterval, start]);
+
+  useEffect(() => {
+    return () => {
+      isInitialized.current = false;
+      clearRecordInterval();
+      destroyWebGazer();
+    };
+  }, [clearRecordInterval]);
 
   return {
     status,
@@ -144,13 +229,15 @@ export function useCalibration(): UseCalibrationReturn {
       status === 'validating'
         ? (VALIDATION_POINTS[currentValidationIndex] ?? null)
         : null,
+    gazeData,
+    recordProgress:
+      SAMPLES_PER_POINT > 0 ? currentPointSamples / SAMPLES_PER_POINT : 0,
     validationProgress:
       status === 'validating'
         ? currentValidationIndex / VALIDATION_POINTS.length
         : 0,
     result,
     start,
-    handleClick,
     retry,
   };
 }

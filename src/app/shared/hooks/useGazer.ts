@@ -4,6 +4,7 @@ import {
   initWebGazer,
   destroyWebGazer,
 } from '@shared/utils/webgazerInit';
+import { oneEuroFilter } from '@shared/utils/gazeFilter';
 
 interface GazePoint {
   x: number;
@@ -21,6 +22,8 @@ export function useGazer() {
   const isInitialized = useRef(false);
   // 마지막으로 처리한 시각
   const lastSampleTime = useRef(0);
+  // One Euro Filter 인스턴스 — 훅 생애 주기 동안 상태 유지
+  const filterRef = useRef(oneEuroFilter(1.0, 0.007, 1.0));
 
   const begin = useCallback(async () => {
     // 이미 시작된 상태면 아무것도 하지 않는다
@@ -37,9 +40,9 @@ export function useGazer() {
         if (now - lastSampleTime.current < SAMPLE_INTERVAL_MS) return;
         lastSampleTime.current = now;
 
-        // x, y에 현재 시간을 붙여서 상태 업데이트
-        console.log('gaze:', data.x, data.y);
-        setGazeData({ x: data.x, y: data.y, timestamp: Date.now() });
+        // One Euro Filter로 노이즈 제거 후 상태 업데이트
+        const filtered = filterRef.current({ x: data.x, y: data.y }, now);
+        setGazeData({ x: filtered.x, y: filtered.y, timestamp: now });
       },
     });
 
@@ -55,9 +58,10 @@ export function useGazer() {
     if (!isInitialized.current) return;
     destroyWebGazer();
 
-    // 초기화 플래그 리셋
+    // 초기화 플래그 및 필터 상태 리셋
     isInitialized.current = false;
     lastSampleTime.current = 0;
+    filterRef.current = oneEuroFilter(1.0, 0.007, 1.0);
     setIsRunning(false);
     setGazeData(null);
   }, []);

@@ -31,6 +31,7 @@ export function useSimulatedPointerGaze(
   areaRef: RefObject<HTMLDivElement | null>,
   points: readonly CalibrationPoint[],
   onComplete: () => void,
+  gazeData: GazeData | null,
   options?: UseSimulatedPointerGazeOptions
 ) {
   const arriveThreshold =
@@ -59,20 +60,17 @@ export function useSimulatedPointerGaze(
   useEffect(() => {
     const el = areaRef.current;
     if (!el) return;
+    if (!gazeData) return;
 
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
 
-      const gx = clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100);
-      const gy = clamp(((e.clientY - rect.top) / rect.height) * 100, 0, 100);
-      lastGazeRef.current = { x: gx, y: gy };
-      setGaze({ x: gx, y: gy });
-    };
-
-    el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
-  }, [areaRef]);
+    const gx = clamp(((gazeData.x - rect.left) / rect.width) * 100, 0, 100);
+    const gy = clamp(((gazeData.y - rect.top) / rect.height) * 100, 0, 100);
+    lastGazeRef.current = { x: gx, y: gy };
+    console.log('(', gx, ',', gy, ')', ' rect=(', rect.left, ',', rect.right);
+    setGaze({ x: gx, y: gy });
+  }, [areaRef, gazeData]);
 
   useEffect(() => {
     const id = window.setInterval(() => {

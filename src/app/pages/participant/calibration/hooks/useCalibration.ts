@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { initWebGazer } from '@shared/utils/webgazerInit';
+import { beginWebGazer, initWebGazer } from '@shared/utils/webgazerInit';
 import type {
   CalibrationStatus,
   CalibrationPoint,
@@ -96,7 +96,7 @@ export function useCalibration(): UseCalibrationReturn {
     reset();
     // 세션 간 학습 데이터 유지 + Kalman은 검증 후 수집 단계에서 켬
     initWebGazer({ saveDataAcrossSessions: true, applyKalmanFilter: false });
-    await window.webgazer.begin();
+    await beginWebGazer();
     setStatusSync('calibrating');
   }, [reset, setStatusSync]);
 

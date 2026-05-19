@@ -26,6 +26,10 @@ interface WebGazerInstance {
   saveDataAcrossSessions(save: boolean): WebGazerInstance;
   applyKalmanFilter(apply: boolean): WebGazerInstance;
   isReady(): boolean;
+  params: {
+    faceMeshSolutionPath: string;
+    [key: string]: unknown;
+  };
 }
 
 interface Window {

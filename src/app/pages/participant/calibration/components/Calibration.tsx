@@ -1,6 +1,8 @@
 import { useRef, type RefObject } from 'react';
 
 import { useSimulatedPointerGaze } from '../hooks/useSimulatedPointerGaze';
+import { useEffect } from 'react';
+import { useGazer } from '@app/shared/hooks/useGazer';
 
 const CALIBRATION_POINTS = [
   { x: 10, y: 10 },
@@ -264,10 +266,21 @@ const Calibration = (props: CalibrationProps) => {
   const { onPrev, onComplete } = props;
   const calibrationAreaRef = useRef<HTMLDivElement>(null);
 
+  const { gazeData, begin, end } = useGazer();
+
+  useEffect(() => {
+    begin();
+
+    return () => {
+      end();
+    };
+  }, [begin, end]);
+
   const { gaze, currentIndex } = useSimulatedPointerGaze(
     calibrationAreaRef,
     CALIBRATION_POINTS,
-    onComplete
+    onComplete,
+    gazeData
   );
 
   return (

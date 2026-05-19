@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { initWebGazer, destroyWebGazer } from '@shared/utils/webgazerInit';
+import {
+  beginWebGazer,
+  initWebGazer,
+  destroyWebGazer,
+} from '@shared/utils/webgazerInit';
 
 interface GazePoint {
   x: number;
@@ -34,11 +38,12 @@ export function useGazer() {
         lastSampleTime.current = now;
 
         // x, y에 현재 시간을 붙여서 상태 업데이트
+        console.log('gaze:', data.x, data.y);
         setGazeData({ x: data.x, y: data.y, timestamp: Date.now() });
       },
     });
 
-    await window.webgazer.begin();
+    await beginWebGazer();
 
     // 초기화
     isInitialized.current = true;

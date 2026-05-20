@@ -33,6 +33,21 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
   if (onGaze) {
     window.webgazer.setGazeListener(onGaze);
   }
+
+  const style = document.createElement('style');
+  style.textContent = `
+  #webgazerVideoFeed,
+  #webgazerVideoContainer,
+  #webgazerFaceOverlay,
+  #webgazerFaceFeedbackBox {
+    left: auto !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 300px !important;
+    height: 200px !important;
+  }
+`;
+  document.head.appendChild(style);
 }
 
 export async function beginWebGazer(): Promise<void> {

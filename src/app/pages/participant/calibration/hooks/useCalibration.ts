@@ -163,11 +163,10 @@ export function useCalibration(
     [clearRecordInterval, getTargetPixel, runValidation]
   );
 
-  // useLayoutEffect: 렌더 직후 동기적으로 ref를 최신값으로 갱신
-  // deps 없음 → 매 렌더 후 실행되지만 setState를 호출하지 않으므로 루프 없음
+  // startPointRecording이 변경될 때만 ref 갱신
   useLayoutEffect(() => {
     startPointRecordingRef.current = startPointRecording;
-  });
+  }, [startPointRecording]);
 
   const start = useCallback(async () => {
     if (isInitialized.current) return;

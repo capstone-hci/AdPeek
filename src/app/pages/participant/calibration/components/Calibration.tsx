@@ -312,10 +312,16 @@ const Calibration = (props: CalibrationProps) => {
     start();
   }, [start]);
 
-  // 완료 시 다음 단계로
+  // onComplete ref: 부모가 매 렌더마다 새 함수를 넘겨도 루프 방지
+  const onCompleteRef = useRef(onComplete);
   useEffect(() => {
-    if (status === 'done') onComplete();
-  }, [status, onComplete]);
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // 완료 시 다음 단계로 (status만 의존 → onComplete 불안정해도 안전)
+  useEffect(() => {
+    if (status === 'done') onCompleteRef.current();
+  }, [status]);
 
   // 정확도 부족 시 재시도 화면
   if (status === 'failed') {

@@ -1,6 +1,7 @@
 import {
   useState,
   useEffect,
+  useLayoutEffect,
   useRef,
   useCallback,
   type RefObject,
@@ -36,9 +37,9 @@ export interface UseCalibrationReturn {
   totalPoints: number;
   currentCalibrationPoint: CalibrationPoint | null;
   currentValidationPoint: CalibrationPoint | null;
-  gazeData: { x: number; y: number } | null; // WebGazer 예측 좌표 (픽셀)
-  recordProgress: number; // 0–1, 현재 포인트 기록 진행률
-  validationProgress: number; // 0–1
+  gazeData: { x: number; y: number } | null;
+  recordProgress: number;
+  validationProgress: number;
   result: CalibrationResult | null;
   start: () => Promise<void>;
   retry: () => void;
@@ -48,11 +49,8 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * areaRef: 캘리브레이션 영역 DOM 요소.
- * 제공 시 해당 요소 기준 실제 픽셀 좌표로 학습 데이터 기록.
- * 미제공 시 window 전체 기준.
- */
+const GAZE_THROTTLE_MS = 33; // ~30Hz
+
 export function useCalibration(
   areaRef?: RefObject<HTMLElement | null>
 ): UseCalibrationReturn {
@@ -69,8 +67,8 @@ export function useCalibration(
   const gazeRef = useRef<{ x: number; y: number } | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isInitialized = useRef(false);
+  const lastGazeTime = useRef(0); // 30Hz 스로틀용
 
-  // startPointRecording이 자기 자신을 setTimeout으로 재귀 호출하므로 ref로 관리
   const startPointRecordingRef = useRef<(index: number) => void>(() => {});
 
   const setStatusSync = useCallback((s: CalibrationStatus) => {
@@ -85,7 +83,6 @@ export function useCalibration(
     }
   }, []);
 
-  // areaRef가 있으면 실제 화면 픽셀 좌표, 없으면 window 전체 기준
   const getTargetPixel = useCallback(
     (nx: number, ny: number): { x: number; y: number } => {
       const el = areaRef?.current;
@@ -104,7 +101,6 @@ export function useCalibration(
     [areaRef]
   );
 
-  // 검증: 각 포인트에서 눈 고정 후 gazeRef 샘플 수집
   const runValidation = useCallback(async () => {
     setStatusSync('validating');
     const validationResults: ValidationPoint[] = [];
@@ -132,7 +128,6 @@ export function useCalibration(
     setStatusSync(computed.accuracy >= ACCURACY_THRESHOLD ? 'done' : 'failed');
   }, [setStatusSync]);
 
-  // 포인트별 자동 기록: 예측 없어도 학습 데이터 쌓임
   const startPointRecording = useCallback(
     (pointIndex: number) => {
       clearRecordInterval();
@@ -168,9 +163,11 @@ export function useCalibration(
     [clearRecordInterval, getTargetPixel, runValidation]
   );
 
-  useEffect(() => {
+  // useLayoutEffect: 렌더 직후 동기적으로 ref를 최신값으로 갱신
+  // deps 없음 → 매 렌더 후 실행되지만 setState를 호출하지 않으므로 루프 없음
+  useLayoutEffect(() => {
     startPointRecordingRef.current = startPointRecording;
-  }, [startPointRecording]);
+  });
 
   const start = useCallback(async () => {
     if (isInitialized.current) return;
@@ -178,6 +175,7 @@ export function useCalibration(
 
     clearRecordInterval();
     gazeRef.current = null;
+    lastGazeTime.current = 0;
     setStatusSync('idle');
     setCurrentPointIndex(0);
     setCurrentPointSamples(0);
@@ -191,7 +189,15 @@ export function useCalibration(
       applyKalmanFilter: false,
       onGaze: (data) => {
         if (!data) return;
+
+        // gazeRef는 항상 최신값 유지 (검증 샘플링에 사용)
         gazeRef.current = { x: data.x, y: data.y };
+
+        // React state 업데이트는 30Hz로 제한 (60fps WebGazer → 과도한 리렌더 방지)
+        const now = Date.now();
+        if (now - lastGazeTime.current < GAZE_THROTTLE_MS) return;
+        lastGazeTime.current = now;
+
         setGazeData({ x: data.x, y: data.y });
       },
     });
@@ -204,6 +210,7 @@ export function useCalibration(
   const retry = useCallback(() => {
     clearRecordInterval();
     isInitialized.current = false;
+    lastGazeTime.current = 0;
     window.webgazer.clearData();
     start();
   }, [clearRecordInterval, start]);
@@ -211,6 +218,7 @@ export function useCalibration(
   useEffect(() => {
     return () => {
       isInitialized.current = false;
+      lastGazeTime.current = 0;
       clearRecordInterval();
       destroyWebGazer();
     };

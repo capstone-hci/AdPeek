@@ -1,10 +1,12 @@
 type CompleteProps = {
+  accuracy: number;
+  meanErrorPx: number;
   onRetry: () => void;
   onNext: () => void;
 };
 
 const Complete = (props: CompleteProps) => {
-  const { onRetry, onNext } = props;
+  const { accuracy, meanErrorPx, onRetry, onNext } = props;
 
   return (
     <div
@@ -77,7 +79,9 @@ const Complete = (props: CompleteProps) => {
             }}
           >
             시선추적 정밀도:{' '}
-            <strong style={{ color: 'var(--success)' }}>94.7%</strong>
+            <strong style={{ color: 'var(--success)' }}>{accuracy}%</strong> ·
+            평균 오차{' '}
+            <strong style={{ color: 'var(--text2)' }}>{meanErrorPx}px</strong>
           </p>
 
           <p
@@ -87,7 +91,7 @@ const Complete = (props: CompleteProps) => {
               marginBottom: 28,
             }}
           >
-            매우 좋은 상태입니다. 다음 단계로 진행해주세요.
+            캘리브레이션이 완료되었습니다. 다음 단계로 진행해주세요.
           </p>
 
           <div

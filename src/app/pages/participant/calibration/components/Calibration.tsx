@@ -11,21 +11,31 @@ const DISPLAY_POINTS = CALIBRATION_POINTS.map((p) => ({
 
 type CalibrationProps = {
   onPrev: () => void;
-  onComplete: () => void;
+  onComplete: (accuracy: number, meanErrorPx: number) => void;
 };
 
 type CalibrationViewProps = {
   gaze: { x: number; y: number };
   currentIndex: number;
+  isRecording: boolean;
   onPrev: () => void;
+  onAreaClick: () => void;
   areaRef: RefObject<HTMLDivElement | null>;
   status: CalibrationStatus;
   validationPoint: { nx: number; ny: number } | null;
 };
 
 const CalibrationView = (props: CalibrationViewProps) => {
-  const { gaze, currentIndex, onPrev, areaRef, status, validationPoint } =
-    props;
+  const {
+    gaze,
+    currentIndex,
+    isRecording,
+    onPrev,
+    onAreaClick,
+    areaRef,
+    status,
+    validationPoint,
+  } = props;
 
   return (
     <div
@@ -71,7 +81,9 @@ const CalibrationView = (props: CalibrationViewProps) => {
             >
               {status === 'validating'
                 ? '파란 점을 바라봐 주세요'
-                : '나타나는 점을 정확히 응시해주세요'}
+                : isRecording
+                  ? '기록 중...'
+                  : '점을 응시한 채로 클릭해주세요'}
             </div>
           </div>
 
@@ -110,6 +122,9 @@ const CalibrationView = (props: CalibrationViewProps) => {
 
         <div
           ref={areaRef}
+          onClick={
+            status === 'calibrating' && !isRecording ? onAreaClick : undefined
+          }
           style={{
             position: 'relative',
             background: 'var(--surface)',
@@ -117,6 +132,10 @@ const CalibrationView = (props: CalibrationViewProps) => {
             overflow: 'hidden',
             aspectRatio: '16 / 9',
             boxShadow: 'var(--shadow-lg)',
+            cursor:
+              status === 'calibrating' && !isRecording
+                ? 'crosshair'
+                : 'default',
           }}
         >
           {/* 캘리브레이션 포인트 */}
@@ -142,9 +161,11 @@ const CalibrationView = (props: CalibrationViewProps) => {
                       borderRadius: '50%',
                       background: isCompleted
                         ? 'var(--success)'
-                        : isCurrent
-                          ? 'var(--accent)'
-                          : 'var(--border)',
+                        : isCurrent && isRecording
+                          ? 'var(--success)'
+                          : isCurrent
+                            ? 'var(--accent)'
+                            : 'var(--border)',
                       transition: 'all 0.3s var(--ease)',
                       position: 'relative',
                       display: 'flex',
@@ -163,7 +184,7 @@ const CalibrationView = (props: CalibrationViewProps) => {
                         />
                       </svg>
                     )}
-                    {isCurrent && (
+                    {isCurrent && !isRecording && (
                       <div
                         style={{
                           position: 'absolute',
@@ -173,6 +194,19 @@ const CalibrationView = (props: CalibrationViewProps) => {
                           border: '2px solid var(--accent)',
                           opacity: 0.4,
                           animation: 'pulse 1s ease infinite',
+                        }}
+                      />
+                    )}
+                    {isCurrent && isRecording && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          width: 48,
+                          height: 48,
+                          borderRadius: '50%',
+                          border: '2px solid var(--success)',
+                          opacity: 0.6,
+                          animation: 'pulse 0.5s ease infinite',
                         }}
                       />
                     )}
@@ -282,11 +316,13 @@ const Calibration = (props: CalibrationProps) => {
   const {
     status,
     currentPointIndex,
+    isRecording,
     currentValidationPoint,
     gazeData,
     result,
     start,
     retry,
+    handleCalibrationClick,
   } = useCalibration(calibrationAreaRef);
 
   // gazeData(픽셀) → 캘리브레이션 영역 기준 % 변환
@@ -318,10 +354,12 @@ const Calibration = (props: CalibrationProps) => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  // 완료 시 다음 단계로 (status만 의존 → onComplete 불안정해도 안전)
+  // 완료 시 다음 단계로 — result와 함께 전달
   useEffect(() => {
-    if (status === 'done') onCompleteRef.current();
-  }, [status]);
+    if (status === 'done' && result) {
+      onCompleteRef.current(result.accuracy, result.meanErrorPx);
+    }
+  }, [status, result]);
 
   // 정확도 부족 시 재시도 화면
   if (status === 'failed') {
@@ -382,7 +420,9 @@ const Calibration = (props: CalibrationProps) => {
     <CalibrationView
       gaze={gaze}
       currentIndex={currentPointIndex}
+      isRecording={isRecording}
       onPrev={onPrev}
+      onAreaClick={handleCalibrationClick}
       areaRef={calibrationAreaRef}
       status={status}
       validationPoint={currentValidationPoint}

@@ -23,7 +23,7 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
   window.webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
 
   window.webgazer
-    .setRegression('ridge')
+    .setRegression('weightedRidge') // 최근 샘플에 더 높은 가중치 → 빠른 수렴
     .setTracker('TFFacemesh')
     .showVideoPreview(showVideo)
     .showPredictionPoints(showPredictionPoints)

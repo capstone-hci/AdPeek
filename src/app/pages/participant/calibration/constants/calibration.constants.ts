@@ -22,10 +22,9 @@ export const VALIDATION_POINTS: CalibrationPoint[] = [
   { id: 4, nx: 0.7, ny: 0.75 },
 ];
 
-export const RECORD_INTERVAL_MS = 200; // 포인트당 자동 기록 간격 (ms)
-export const SAMPLES_PER_POINT = 10; // 포인트당 기록 횟수 (300ms × 10 = 3초)
-export const POINT_TRANSITION_MS = 500; // 포인트 전환 대기 (ms)
-export const SETTLE_TIME_MS = 1000; // 검증: 눈 고정 대기 (ms)
-export const SAMPLING_DURATION_MS = 1000; // 검증: 시선 수집 구간 (ms)
-export const ACCURACY_THRESHOLD = 50; // 통과 기준 (%)
-export const MAX_ERROR_PX = 300; // 이 오차 이상이면 정확도 0%로 처리
+export const RECORD_INTERVAL_MS = 80; // 클릭 후 샘플 수집 간격 (ms)
+export const SAMPLES_PER_POINT = 5; // 클릭당 수집 샘플 수 (80ms × 5 = 400ms)
+export const SETTLE_TIME_MS = 1500; // 검증: 눈 고정 대기 (ms)
+export const SAMPLING_DURATION_MS = 1500; // 검증: 시선 수집 구간 (ms)
+export const ACCURACY_THRESHOLD = 20; // 통과 기준 (%) — 웹캠 기반 한계 고려
+export const MAX_ERROR_PX = 900; // 웹캠 시선추적 현실적 기준 (이상이면 0%)

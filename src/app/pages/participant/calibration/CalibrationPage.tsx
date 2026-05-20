@@ -25,6 +25,10 @@ const CalibrationPage = () => {
   const participant = state as ParticipantConsentState | null;
 
   const [subStep, setSubStep] = useState<CalibrationSubStep>(0);
+  const [calibrationResult, setCalibrationResult] = useState({
+    accuracy: 0,
+    meanErrorPx: 0,
+  });
 
   const goConsent = () => {
     navigate(paths.consent, { state: participant ?? undefined });
@@ -42,13 +46,21 @@ const CalibrationPage = () => {
     return (
       <Calibration
         onPrev={() => setSubStep(0)}
-        onComplete={() => setSubStep(2)}
+        onComplete={(accuracy, meanErrorPx) => {
+          setCalibrationResult({ accuracy, meanErrorPx });
+          setSubStep(2);
+        }}
       />
     );
   }
 
   return (
-    <Complete onRetry={() => setSubStep(1)} onNext={goNextExperimentStep} />
+    <Complete
+      accuracy={calibrationResult.accuracy}
+      meanErrorPx={calibrationResult.meanErrorPx}
+      onRetry={() => setSubStep(1)}
+      onNext={goNextExperimentStep}
+    />
   );
 };
 

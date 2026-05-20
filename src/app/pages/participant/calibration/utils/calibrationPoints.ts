@@ -20,12 +20,18 @@ export function euclideanDistance(
 // 검증 포인트들의 평균 오차로 정확도 계산
 export function computeAccuracy(
   validationPoints: ValidationPoint[],
-  maxErrorPx: number
+  maxErrorPx: number,
+  areaRect?: DOMRect
 ): CalibrationResult {
   const errors = validationPoints
     .filter((vp) => vp.predictions.length > 0)
     .map((vp) => {
-      const actual = toPixel(vp.nx, vp.ny);
+      const actual = areaRect
+        ? {
+            x: areaRect.left + vp.nx * areaRect.width,
+            y: areaRect.top + vp.ny * areaRect.height,
+          }
+        : toPixel(vp.nx, vp.ny);
       const n = vp.predictions.length;
       const avgX = vp.predictions.reduce((s, p) => s + p.x, 0) / n;
       const avgY = vp.predictions.reduce((s, p) => s + p.y, 0) / n;

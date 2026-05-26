@@ -15,7 +15,9 @@ export const useViewerGaze = () => {
   const [focus, setFocus] = useState(VIEWING.initialFocus);
 
   useEffect(() => {
-    begin();
+    begin().then(() => {
+      window.webgazer.removeMouseEventListeners();
+    });
   }, [begin]);
 
   useEffect(() => {

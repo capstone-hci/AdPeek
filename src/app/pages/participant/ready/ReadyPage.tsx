@@ -7,7 +7,7 @@ const ReadyPage = () => {
   const navigate = useNavigate();
 
   const handleStart = () => {
-    navigate(paths.view);
+    navigate(paths.step4.view);
   };
 
   return (

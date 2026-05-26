@@ -6,6 +6,7 @@ import { paths } from '@app/routes/path';
 import SurveyForm from './components/SurveyForm';
 import SurveySidebar from './components/SurveySidebar';
 import { useSurveyForm } from './hooks/useSurveyForm';
+import { isSurveyComplete } from './types/survey';
 
 const SurveyPage = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const SurveyPage = () => {
   };
 
   const handleSubmit = () => {
+    if (!isSurveyComplete(answers)) return;
     // TODO: API 연동 시 answers 전송
     navigate(paths.step5.complete);
   };

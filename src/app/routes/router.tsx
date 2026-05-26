@@ -7,6 +7,7 @@ import CalibrationPage from '@app/pages/participant/calibration/CalibrationPage'
 import ConnectionPage from '@app/pages/participant/connection/ConnectionPage';
 import ReadyPage from '@app/pages/participant/ready/ReadyPage';
 import ViewPage from '@app/pages/participant/view/ViewPage';
+import CompletePage from '@app/pages/participant/complete/CompletePage';
 import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
@@ -35,12 +36,16 @@ const router = createBrowserRouter([
         element: <ConnectionPage />,
       },
       {
-        path: paths.ready,
+        path: paths.step4.ready,
         element: <ReadyPage />,
       },
       {
-        path: paths.view,
+        path: paths.step4.view,
         element: <ViewPage />,
+      },
+      {
+        path: paths.step4.complete,
+        element: <CompletePage />,
       },
     ],
   },

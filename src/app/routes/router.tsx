@@ -8,7 +8,7 @@ import ConnectionPage from '@app/pages/participant/step3/ConnectionPage';
 import ReadyPage from '@app/pages/participant/step4/ready/ReadyPage';
 import ViewPage from '@app/pages/participant/step4/view/ViewPage';
 import ViewCompletePage from '@app/pages/participant/step4/complete/CompletePage';
-import SurveyCompletePage from '@app/pages/participant/step5/complete/CompletePage';
+import CompletePage from '@app/pages/participant/step5/complete/CompletePage';
 import SurveyPage from '@app/pages/participant/step5/survey/SurveyPage';
 import { paths } from '@app/routes/path';
 
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       },
       {
         path: paths.step5.complete,
-        element: <SurveyCompletePage />,
+        element: <CompletePage />,
       },
     ],
   },

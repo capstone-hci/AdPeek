@@ -14,7 +14,7 @@ const CompletePage = () => {
   const navigate = useNavigate();
 
   const handleHome = () => {
-    navigate(paths.home);
+    navigate(paths.start);
   };
 
   return (

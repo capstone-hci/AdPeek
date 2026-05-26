@@ -7,7 +7,7 @@ import OptionButton from './OptionButton';
 import SurveySection from './SurveySection';
 
 type RecallQuestionProps = {
-  value: RecallAnswer;
+  value: RecallAnswer | null;
   onChange: (value: RecallAnswer) => void;
 };
 

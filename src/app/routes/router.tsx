@@ -2,12 +2,14 @@ import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@app/layout/RootLayout';
 import HomePage from '@app/pages/home/HomePage';
 import StartPage from '@app/pages/start/StartPage';
-import ConsentPage from '@app/pages/participant/consent/ConsentPage';
-import CalibrationPage from '@app/pages/participant/calibration/CalibrationPage';
-import ConnectionPage from '@app/pages/participant/connection/ConnectionPage';
-import ReadyPage from '@app/pages/participant/ready/ReadyPage';
-import ViewPage from '@app/pages/participant/view/ViewPage';
-import CompletePage from '@app/pages/participant/complete/CompletePage';
+import ConsentPage from '@app/pages/participant/step1/ConsentPage';
+import CalibrationPage from '@app/pages/participant/step2/CalibrationPage';
+import ConnectionPage from '@app/pages/participant/step3/ConnectionPage';
+import ReadyPage from '@app/pages/participant/step4/ready/ReadyPage';
+import ViewPage from '@app/pages/participant/step4/view/ViewPage';
+import ViewCompletePage from '@app/pages/participant/step4/complete/CompletePage';
+import CompletePage from '@app/pages/participant/step5/complete/CompletePage';
+import SurveyPage from '@app/pages/participant/step5/survey/SurveyPage';
 import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
       },
       {
         path: paths.step4.complete,
+        element: <ViewCompletePage />,
+      },
+      {
+        path: paths.step5.survey,
+        element: <SurveyPage />,
+      },
+      {
+        path: paths.step5.complete,
         element: <CompletePage />,
       },
     ],

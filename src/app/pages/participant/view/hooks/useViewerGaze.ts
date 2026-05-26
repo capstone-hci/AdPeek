@@ -7,7 +7,7 @@ import { VIEWING } from '../constants/viewing';
 
 export const useViewerGaze = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { gazeData, begin } = useGazer();
+  const { gazeData, begin } = useGazer({ showVideo: true });
 
   const [gazeTrail, setGazeTrail] = useState<GazePoint[]>([
     VIEWING.initialGaze,

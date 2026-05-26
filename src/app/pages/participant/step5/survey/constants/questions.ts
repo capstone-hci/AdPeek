@@ -20,13 +20,11 @@ export const EMOTION_OPTIONS: {
   value: EmotionAnswer;
   label: string;
   description: string;
-  color?: 'green';
 }[] = [
   {
     value: 'positive',
     label: '긍정적이에요',
     description: '좋은 인상을 받았어요',
-    color: 'green',
   },
   {
     value: 'neutral',

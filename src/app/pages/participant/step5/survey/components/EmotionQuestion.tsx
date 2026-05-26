@@ -7,7 +7,7 @@ import OptionButton from './OptionButton';
 import SurveySection from './SurveySection';
 
 type EmotionQuestionProps = {
-  value: EmotionAnswer;
+  value: EmotionAnswer | null;
   onChange: (value: EmotionAnswer) => void;
 };
 
@@ -23,7 +23,6 @@ const EmotionQuestion = ({ value, onChange }: EmotionQuestionProps) => (
           selected={value === option.value}
           label={option.label}
           description={option.description}
-          color={option.color}
           onClick={() => onChange(option.value)}
         />
       ))}

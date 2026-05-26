@@ -10,5 +10,10 @@ export const paths = {
     view: '/participant/step4/view',
     complete: '/participant/step4/complete',
   },
+  /** step5: 설문 플로우 (설문 → 최종 완료) */
+  step5: {
+    survey: '/participant/step5/survey',
+    complete: '/participant/step5/complete',
+  },
   dashboard: '/marketer/dashboard',
 } as const;

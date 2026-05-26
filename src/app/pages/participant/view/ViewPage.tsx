@@ -10,7 +10,7 @@ const ViewPage = () => {
   const navigate = useNavigate();
 
   const handleComplete = useCallback(() => {
-    navigate(paths.home);
+    navigate(paths.step4.complete);
   }, [navigate]);
 
   const { currentTime, totalDuration, progress, remain } =

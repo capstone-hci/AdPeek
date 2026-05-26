@@ -1,6 +1,6 @@
 /**
  * CompletePage — 참여자 광고 시청 완료 페이지.
- * 완료 메시지·결과 보기 버튼을 표시하고, CTA 클릭 시 마케터 대시보드로 이동한다.
+ * 완료 메시지·다음 단계 버튼을 표시하고, CTA 클릭 시 step5 설문으로 이동한다.
  */
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@app/routes/path';
@@ -12,7 +12,7 @@ const CompletePage = () => {
   const navigate = useNavigate();
 
   const handleResult = () => {
-    navigate(paths.dashboard);
+    navigate(paths.step5.survey);
   };
 
   return (

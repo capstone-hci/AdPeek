@@ -5,12 +5,15 @@ import { PREFERENCE_SCORES, SURVEY_QUESTIONS } from '../constants/questions';
 import SurveySection from './SurveySection';
 
 type PreferenceQuestionProps = {
-  value: number;
+  value: number | null;
   onChange: (value: number) => void;
 };
 
 const SCORE_LABELS: Record<number, string> = {
   1: '매우 낮음',
+  2: '낮음',
+  3: '보통',
+  4: '높음',
   5: '매우 높음',
 };
 

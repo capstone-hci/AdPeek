@@ -15,7 +15,11 @@ interface GazePoint {
 const TARGET_HZ = 30;
 const SAMPLE_INTERVAL_MS = 1000 / TARGET_HZ;
 
-export function useGazer() {
+interface UseGazerOptions {
+  showVideo?: boolean;
+}
+
+export function useGazer({ showVideo = false }: UseGazerOptions = {}) {
   const [gazeData, setGazeData] = useState<GazePoint | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   // 중복 호출 방지
@@ -30,6 +34,7 @@ export function useGazer() {
     if (isInitialized.current) return;
 
     initWebGazer({
+      showVideo,
       onGaze: (data) => {
         // 얼굴이 감지되지 않을 때 무시
         if (!data) return;
@@ -51,7 +56,7 @@ export function useGazer() {
     // 초기화
     isInitialized.current = true;
     setIsRunning(true);
-  }, []);
+  }, [showVideo]);
 
   const end = useCallback(() => {
     // 초기화되지 않은 상태면 무시 (StrictMode 이중 cleanup 방지)

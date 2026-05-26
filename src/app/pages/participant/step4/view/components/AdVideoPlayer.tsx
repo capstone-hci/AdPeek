@@ -2,29 +2,27 @@
  * components/AdVideoPlayer.tsx — 16:9 광고 영상 플레이어 컨테이너
  * 플레이스홀더·시선 오버레이·측정 배지·타이머·EEG 패널을 한 영역에 배치
  */
-import type { GazePoint } from '../types/gaze';
+import type { RefObject } from 'react';
 import EegFocusPanel from './EegFocusPanel';
-import GazeOverlay from './GazeOverlay';
 import RecordingBadge from './RecordingBadge';
 import VideoPlaceholder from './VideoPlaceholder';
 import ViewTimer from './ViewTimer';
 
 type AdVideoPlayerProps = {
+  containerRef: RefObject<HTMLDivElement>;
   currentTime: number;
   totalDuration: number;
   focus: number;
-  gazeTrail: GazePoint[];
-  currentGaze: GazePoint;
 };
 
 const AdVideoPlayer = ({
+  containerRef,
   currentTime,
   totalDuration,
   focus,
-  gazeTrail,
-  currentGaze,
 }: AdVideoPlayerProps) => (
   <div
+    ref={containerRef}
     style={{
       position: 'relative',
       aspectRatio: '16 / 9',
@@ -36,7 +34,6 @@ const AdVideoPlayer = ({
     }}
   >
     <VideoPlaceholder />
-    <GazeOverlay gazeTrail={gazeTrail} currentGaze={currentGaze} />
     <RecordingBadge />
     <ViewTimer currentTime={currentTime} totalDuration={totalDuration} />
     <EegFocusPanel focus={focus} />

@@ -14,6 +14,8 @@ interface WebGazerInstance {
   resume(): WebGazerInstance;
   setGazeListener(listener: GazeListener | null): WebGazerInstance;
   clearGazeListener(): WebGazerInstance;
+  addMouseEventListeners(): WebGazerInstance;
+  removeMouseEventListeners(): WebGazerInstance;
   getCurrentPrediction(): Promise<GazeData | null>;
   setRegression(
     type: 'ridge' | 'weightedRidge' | 'threadedRidge'

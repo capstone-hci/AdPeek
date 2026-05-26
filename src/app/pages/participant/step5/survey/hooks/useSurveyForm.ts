@@ -9,9 +9,9 @@ import type {
 } from '../types/survey';
 
 const INITIAL_ANSWERS: SurveyAnswers = {
-  recall: 'remember',
-  preference: 4,
-  emotion: 'positive',
+  recall: null,
+  preference: null,
+  emotion: null,
   opinion: '',
 };
 

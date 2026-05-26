@@ -4,7 +4,7 @@ import { paths } from '@app/routes/path';
 import AdVideoPlayer from './components/AdVideoPlayer';
 import ViewProgress from './components/ViewProgress';
 import { useAdViewingTimer } from './hooks/useAdViewingTimer';
-import { useGazeSimulation } from './hooks/useGazeSimulation';
+import { useViewerGaze } from './hooks/useViewerGaze';
 
 const ViewPage = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const ViewPage = () => {
 
   const { currentTime, totalDuration, progress, remain } =
     useAdViewingTimer(handleComplete);
-  const { gazeTrail, focus, currentGaze } = useGazeSimulation();
+  const { gazeTrail, focus, currentGaze, containerRef } = useViewerGaze();
 
   return (
     <div
@@ -37,6 +37,7 @@ const ViewPage = () => {
         }}
       >
         <AdVideoPlayer
+          containerRef={containerRef}
           currentTime={currentTime}
           totalDuration={totalDuration}
           focus={focus}

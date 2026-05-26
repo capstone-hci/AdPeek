@@ -4,11 +4,12 @@
 import { SURVEY_COPY } from '../constants/copy';
 
 type SurveyActionsProps = {
+  canSubmit: boolean;
   onPrev: () => void;
   onSubmit: () => void;
 };
 
-const SurveyActions = ({ onPrev, onSubmit }: SurveyActionsProps) => (
+const SurveyActions = ({ canSubmit, onPrev, onSubmit }: SurveyActionsProps) => (
   <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
     <button
       type="button"
@@ -30,17 +31,18 @@ const SurveyActions = ({ onPrev, onSubmit }: SurveyActionsProps) => (
 
     <button
       type="button"
+      disabled={!canSubmit}
       onClick={onSubmit}
       style={{
         border: 'none',
         flex: 1,
-        background: 'var(--accent)',
-        color: '#fff',
+        background: canSubmit ? 'var(--accent)' : 'var(--bg2)',
+        color: canSubmit ? '#fff' : 'var(--text4)',
         padding: '15px 28px',
         borderRadius: 10,
         fontSize: 15,
         fontWeight: 600,
-        cursor: 'pointer',
+        cursor: canSubmit ? 'pointer' : 'not-allowed',
       }}
     >
       {SURVEY_COPY.submitButton}

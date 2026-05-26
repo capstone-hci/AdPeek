@@ -1,10 +1,11 @@
 /**
  * components/SurveyForm.tsx — 설문 문항 폼 영역.
  */
-import type {
-  EmotionAnswer,
-  RecallAnswer,
-  SurveyAnswers,
+import {
+  isSurveyComplete,
+  type EmotionAnswer,
+  type RecallAnswer,
+  type SurveyAnswers,
 } from '../types/survey';
 import EmotionQuestion from './EmotionQuestion';
 import OpinionQuestion from './OpinionQuestion';
@@ -30,24 +31,32 @@ const SurveyForm = ({
   onOpinionChange,
   onPrev,
   onSubmit,
-}: SurveyFormProps) => (
-  <main
-    style={{
-      background: 'var(--surface)',
-      borderRadius: 18,
-      boxShadow: 'inset 0 0 0 1px var(--border2)',
-      padding: 32,
-    }}
-  >
-    <RecallQuestion value={answers.recall} onChange={onRecallChange} />
-    <PreferenceQuestion
-      value={answers.preference}
-      onChange={onPreferenceChange}
-    />
-    <EmotionQuestion value={answers.emotion} onChange={onEmotionChange} />
-    <OpinionQuestion value={answers.opinion} onChange={onOpinionChange} />
-    <SurveyActions onPrev={onPrev} onSubmit={onSubmit} />
-  </main>
-);
+}: SurveyFormProps) => {
+  const canSubmit = isSurveyComplete(answers);
+
+  return (
+    <main
+      style={{
+        background: 'var(--surface)',
+        borderRadius: 18,
+        boxShadow: 'inset 0 0 0 1px var(--border2)',
+        padding: 32,
+      }}
+    >
+      <RecallQuestion value={answers.recall} onChange={onRecallChange} />
+      <PreferenceQuestion
+        value={answers.preference}
+        onChange={onPreferenceChange}
+      />
+      <EmotionQuestion value={answers.emotion} onChange={onEmotionChange} />
+      <OpinionQuestion value={answers.opinion} onChange={onOpinionChange} />
+      <SurveyActions
+        canSubmit={canSubmit}
+        onPrev={onPrev}
+        onSubmit={onSubmit}
+      />
+    </main>
+  );
+};
 
 export default SurveyForm;

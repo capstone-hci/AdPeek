@@ -3,9 +3,7 @@
  * 플레이스홀더·시선 오버레이·측정 배지·타이머·EEG 패널을 한 영역에 배치
  */
 import type { RefObject } from 'react';
-import type { GazePoint } from '../types/gaze';
 import EegFocusPanel from './EegFocusPanel';
-import GazeOverlay from './GazeOverlay';
 import RecordingBadge from './RecordingBadge';
 import VideoPlaceholder from './VideoPlaceholder';
 import ViewTimer from './ViewTimer';
@@ -15,8 +13,6 @@ type AdVideoPlayerProps = {
   currentTime: number;
   totalDuration: number;
   focus: number;
-  gazeTrail: GazePoint[];
-  currentGaze: GazePoint;
 };
 
 const AdVideoPlayer = ({
@@ -24,8 +20,6 @@ const AdVideoPlayer = ({
   currentTime,
   totalDuration,
   focus,
-  gazeTrail,
-  currentGaze,
 }: AdVideoPlayerProps) => (
   <div
     ref={containerRef}
@@ -40,7 +34,6 @@ const AdVideoPlayer = ({
     }}
   >
     <VideoPlaceholder />
-    <GazeOverlay gazeTrail={gazeTrail} currentGaze={currentGaze} />
     <RecordingBadge />
     <ViewTimer currentTime={currentTime} totalDuration={totalDuration} />
     <EegFocusPanel focus={focus} />

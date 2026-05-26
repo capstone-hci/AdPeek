@@ -15,7 +15,7 @@ const ViewPage = () => {
 
   const { currentTime, totalDuration, progress, remain } =
     useAdViewingTimer(handleComplete);
-  const { gazeTrail, focus, currentGaze, containerRef } = useViewerGaze();
+  const { focus, containerRef } = useViewerGaze();
 
   return (
     <div
@@ -41,8 +41,6 @@ const ViewPage = () => {
           currentTime={currentTime}
           totalDuration={totalDuration}
           focus={focus}
-          gazeTrail={gazeTrail}
-          currentGaze={currentGaze}
         />
 
         <ViewProgress progress={progress} remain={remain} />

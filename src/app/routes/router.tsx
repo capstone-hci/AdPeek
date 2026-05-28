@@ -10,6 +10,7 @@ import ViewPage from '@app/pages/participant/step4/view/ViewPage';
 import ViewCompletePage from '@app/pages/participant/step4/complete/CompletePage';
 import CompletePage from '@app/pages/participant/step5/complete/CompletePage';
 import SurveyPage from '@app/pages/participant/step5/survey/SurveyPage';
+import DashboardPage from '@app/pages/marketer/dashboard/DashboardPage';
 import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: paths.step5.complete,
         element: <CompletePage />,
+      },
+      {
+        path: paths.dashboard,
+        element: <DashboardPage />,
       },
     ],
   },

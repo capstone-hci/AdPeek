@@ -1,20 +1,23 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@app/routes/path';
 import AdVideoPlayer from './components/AdVideoPlayer';
 import ViewProgress from './components/ViewProgress';
-import { useAdViewingTimer } from './hooks/useAdViewingTimer';
+import { useVideoTimer } from './hooks/useVideoTimer';
 import { useViewerGaze } from './hooks/useViewerGaze';
 
 const ViewPage = () => {
   const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleComplete = useCallback(() => {
     navigate(paths.step4.complete);
   }, [navigate]);
 
-  const { currentTime, totalDuration, progress, remain } =
-    useAdViewingTimer(handleComplete);
+  const { currentTime, totalDuration, progress, remain } = useVideoTimer(
+    videoRef,
+    handleComplete
+  );
   const { focus, containerRef } = useViewerGaze();
 
   return (
@@ -38,9 +41,11 @@ const ViewPage = () => {
       >
         <AdVideoPlayer
           containerRef={containerRef}
+          videoRef={videoRef}
           currentTime={currentTime}
           totalDuration={totalDuration}
           focus={focus}
+          onEnded={handleComplete}
         />
 
         <ViewProgress progress={progress} remain={remain} />

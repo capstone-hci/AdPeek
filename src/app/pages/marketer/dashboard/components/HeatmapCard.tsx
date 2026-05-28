@@ -28,16 +28,6 @@ const HeatmapCard = () => (
           {DASHBOARD_COPY.heatmap.subtitle}
         </div>
       </div>
-      <button
-        type="button"
-        style={{
-          background: 'transparent',
-          color: 'var(--accent)',
-          cursor: 'pointer',
-        }}
-      >
-        {DASHBOARD_COPY.heatmap.timelineLink}
-      </button>
     </div>
 
     <div

@@ -4,11 +4,46 @@ import MuseIcon from './MuseIcon';
 
 type DeviceConnectionCardProps = {
   isConnected: boolean;
+  isConnectionFailed?: boolean;
+  isConnecting?: boolean;
   onConnect: () => void;
 };
 
 const DeviceConnectionCard = (props: DeviceConnectionCardProps) => {
-  const { isConnected, onConnect } = props;
+  const {
+    isConnected,
+    isConnectionFailed = false,
+    isConnecting = false,
+    onConnect,
+  } = props;
+
+  const statusChip = isConnected
+    ? {
+        label: '연결됨',
+        background: 'rgb(230, 247, 238)',
+        color: 'var(--success)',
+        dotColor: 'var(--success)',
+      }
+    : isConnecting
+      ? {
+          label: '연결 중',
+          background: 'var(--accent-soft)',
+          color: 'var(--accent)',
+          dotColor: 'var(--accent)',
+        }
+      : isConnectionFailed
+        ? {
+            label: '연결 실패',
+            background: 'rgba(240, 68, 82, 0.12)',
+            color: 'var(--danger)',
+            dotColor: 'var(--danger)',
+          }
+        : {
+            label: '연결 대기',
+            background: 'var(--bg2)',
+            color: 'var(--text3)',
+            dotColor: 'var(--text3)',
+          };
 
   return (
     <div
@@ -56,8 +91,8 @@ const DeviceConnectionCard = (props: DeviceConnectionCardProps) => {
             borderRadius: 20,
             fontSize: 12,
             fontWeight: 600,
-            background: isConnected ? 'rgb(230, 247, 238)' : 'var(--bg2)',
-            color: isConnected ? 'var(--success)' : 'var(--text3)',
+            background: statusChip.background,
+            color: statusChip.color,
             display: 'flex',
             alignItems: 'center',
             gap: 6,
@@ -68,10 +103,10 @@ const DeviceConnectionCard = (props: DeviceConnectionCardProps) => {
               width: 6,
               height: 6,
               borderRadius: '50%',
-              background: isConnected ? 'var(--success)' : 'var(--text3)',
+              background: statusChip.dotColor,
             }}
           />
-          {isConnected ? '연결됨' : '연결 안됨'}
+          {statusChip.label}
         </div>
       </div>
 
@@ -138,10 +173,11 @@ const DeviceConnectionCard = (props: DeviceConnectionCardProps) => {
         <button
           type="button"
           onClick={onConnect}
+          disabled={isConnecting}
           style={{
             border: 'none',
-            background: 'var(--accent)',
-            color: '#fff',
+            background: isConnecting ? 'var(--bg2)' : 'var(--accent)',
+            color: isConnecting ? 'var(--text4)' : '#fff',
             padding: '15px 28px',
             borderRadius: 10,
             fontSize: 16,
@@ -150,10 +186,14 @@ const DeviceConnectionCard = (props: DeviceConnectionCardProps) => {
             letterSpacing: '-0.02em',
             transition:
               'background 0.15s var(--ease), transform 0.1s var(--ease)',
-            cursor: 'pointer',
+            cursor: isConnecting ? 'not-allowed' : 'pointer',
           }}
         >
-          장치 연결하기
+          {isConnecting
+            ? '연결 중…'
+            : isConnectionFailed
+              ? '장치 연결 다시 하기'
+              : '장치 연결하기'}
         </button>
       )}
     </div>

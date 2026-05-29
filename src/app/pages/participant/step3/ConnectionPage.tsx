@@ -5,12 +5,34 @@ import ConnectionActions from './components/ConnectionActions';
 import ConnectionSidebar from './components/ConnectionSidebar';
 import DeviceConnectionCard from './components/DeviceConnectionCard';
 import EegChannelStatus from './components/EegChannelStatus';
+import { useConnectQuery } from './apis/useConnectQuery';
 import { useEegWaveSimulation } from './hooks/useEegWaveSimulation';
 
 const ConnectionPage = () => {
   const navigate = useNavigate();
   const [isConnected, setIsConnected] = useState(false);
+  const [isConnectionFailed, setIsConnectionFailed] = useState(false);
+  const { refetch, isFetching } = useConnectQuery();
   const { channelValues, waveData } = useEegWaveSimulation(isConnected);
+
+  const handleConnect = async () => {
+    setIsConnectionFailed(false);
+    const { data, isError } = await refetch();
+
+    if (data?.connected) {
+      setIsConnected(true);
+      return;
+    }
+
+    if (isError || !data?.connected) {
+      setIsConnectionFailed(true);
+    }
+  };
+
+  const handleNext = () => {
+    if (!isConnected) return;
+    navigate(paths.step4.ready);
+  };
 
   return (
     <div
@@ -36,7 +58,9 @@ const ConnectionPage = () => {
         <div style={{ width: '100%' }}>
           <DeviceConnectionCard
             isConnected={isConnected}
-            onConnect={() => setIsConnected(true)}
+            isConnectionFailed={isConnectionFailed}
+            isConnecting={isFetching}
+            onConnect={handleConnect}
           />
 
           {isConnected && (
@@ -49,7 +73,7 @@ const ConnectionPage = () => {
           <ConnectionActions
             isConnected={isConnected}
             onPrev={() => navigate(paths.calibration)}
-            onNext={() => navigate(paths.step4.ready)}
+            onNext={handleNext}
           />
         </div>
       </div>

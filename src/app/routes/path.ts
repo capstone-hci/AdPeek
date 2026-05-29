@@ -1,6 +1,5 @@
 export const paths = {
-  home: '/',
-  start: '/start',
+  start: '/',
   consent: '/participant/step1',
   calibration: '/participant/step2',
   connection: '/participant/step3',

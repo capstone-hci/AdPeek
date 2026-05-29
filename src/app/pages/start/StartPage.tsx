@@ -1,8 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@app/routes/path';
+import { useStatsQuery } from './apis/useStatsQuery';
+
+const formatAttention = (value: number) => {
+  const percent = value <= 1 ? value * 100 : value;
+  return `${Math.round(percent)}%`;
+};
 
 const StartPage = () => {
   const navigate = useNavigate();
+  const { data: stats, isPending } = useStatsQuery();
+
+  const statItems = stats
+    ? [
+        [`${stats.total_participants}명`, '누적 참여자'],
+        [`${stats.total_ads}편`, '분석 광고'],
+        [formatAttention(stats.avg_attention), '평균 집중도'],
+      ]
+    : [
+        ['-', '누적 참여자'],
+        ['-', '분석 광고'],
+        ['-', '평균 집중도'],
+      ];
 
   return (
     <div
@@ -313,11 +332,7 @@ const StartPage = () => {
             width: '100%',
           }}
         >
-          {[
-            ['12명', '누적 참여자'],
-            ['3편', '분석 광고'],
-            ['72%', '평균 집중도'],
-          ].map(([v, l]) => (
+          {statItems.map(([v, l]) => (
             <div key={l} style={{ textAlign: 'center' }}>
               <div
                 style={{
@@ -327,7 +342,7 @@ const StartPage = () => {
                   letterSpacing: '-0.03em',
                 }}
               >
-                {v}
+                {isPending ? '…' : v}
               </div>
               <div
                 style={{

@@ -43,6 +43,7 @@ export const useViewerGaze = ({
 
     begin().then(() => {
       window.webgazer.removeMouseEventListeners();
+      window.webgazer.showVideoPreview(true);
     });
   }, [begin]);
 

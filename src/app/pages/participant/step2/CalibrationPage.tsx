@@ -35,7 +35,7 @@ const CalibrationPage = () => {
   };
 
   const goNextExperimentStep = () => {
-    navigate(paths.home);
+    navigate(paths.connection);
   };
 
   if (subStep === 0) {

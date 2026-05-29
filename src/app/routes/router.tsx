@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@app/layout/RootLayout';
-import HomePage from '@app/pages/home/HomePage';
 import StartPage from '@app/pages/start/StartPage';
 import ConsentPage from '@app/pages/participant/step1/ConsentPage';
 import CalibrationPage from '@app/pages/participant/step2/CalibrationPage';
@@ -15,12 +14,12 @@ import { paths } from '@app/routes/path';
 
 const router = createBrowserRouter([
   {
-    path: paths.home,
+    path: paths.start,
     element: <RootLayout />,
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <StartPage />,
       },
       {
         path: paths.start,

@@ -13,7 +13,7 @@ import { VIEWING } from '../constants/viewing';
 import { postGazeData } from '@app/shared/apis/gaze';
 import { endWebGazer } from '@shared/utils/webgazerInit';
 
-const AD_ID = 'dummy-ad-001';
+const AD_ID = 'ad_001';
 
 type UseViewerGazeOptions = {
   videoRef: RefObject<HTMLVideoElement | null>;

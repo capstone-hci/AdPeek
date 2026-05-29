@@ -11,6 +11,7 @@ import { appendGazePoint } from '../utils/gaze';
 import type { GazePoint, RawGazePoint } from '../types/gaze';
 import { VIEWING } from '../constants/viewing';
 import { postGazeData } from '@app/shared/apis/gaze';
+import { postSessionStart, postSessionStop } from '@app/shared/apis/session';
 import { endWebGazer } from '@shared/utils/webgazerInit';
 
 const AD_ID = 'ad_001';
@@ -40,6 +41,10 @@ export const useViewerGaze = ({
   useEffect(() => {
     sessionStartRef.current = Date.now();
     gazeBufferRef.current = [];
+
+    postSessionStart({ ad_id: AD_ID }).catch((e) =>
+      console.error('[session] start 실패:', e)
+    );
 
     begin().then(() => {
       window.webgazer.removeMouseEventListeners();
@@ -94,9 +99,9 @@ export const useViewerGaze = ({
         start_time: sessionStartRef.current,
         data: gazeBufferRef.current,
       });
-      console.log('[gaze] 전송 완료, 포인트 수:', gazeBufferRef.current.length);
+      await postSessionStop({ ad_id: AD_ID });
     } catch (error) {
-      console.error('[gaze] 전송 실패:', error);
+      console.error('[session/gaze] 전송 실패:', error);
     } finally {
       endWebGazer();
       onComplete();

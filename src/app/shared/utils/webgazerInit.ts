@@ -72,3 +72,19 @@ export function destroyWebGazer(): void {
     console.warn('webgazer 종료 중 오류:', e);
   }
 }
+
+/**
+ * 세션이 완전히 끝났을 때 카메라 스트림까지 종료한다.
+ * end() → WASM 완전 종료로 재시작 불가하므로
+ * 더 이상 WebGazer가 필요 없는 시점(시청 완료)에만 호출할 것.
+ */
+export function endWebGazer(): void {
+  if (!window.webgazer) return;
+  try {
+    window.webgazer.clearGazeListener();
+    window.webgazer.end();
+    _webgazerStarted = false;
+  } catch (e) {
+    console.warn('webgazer end 중 오류:', e);
+  }
+}

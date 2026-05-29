@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo, type RefObject } from 'react';
 import { getProgressPercent, getRemainSeconds } from '../utils/progress';
 
 export const useVideoTimer = (
-  videoRef: RefObject<HTMLVideoElement>,
+  videoRef: RefObject<HTMLVideoElement | null>,
   onComplete: () => void
 ) => {
   const [currentTime, setCurrentTime] = useState(0);

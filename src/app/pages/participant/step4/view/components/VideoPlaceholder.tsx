@@ -6,7 +6,7 @@ import advertiseVideo from '@shared/assets/advertise-video.mp4';
 import type { RefObject } from 'react';
 
 type VideoPlaceholderProps = {
-  videoRef: RefObject<HTMLVideoElement>;
+  videoRef: RefObject<HTMLVideoElement | null>;
   onEnded: () => void;
 };
 

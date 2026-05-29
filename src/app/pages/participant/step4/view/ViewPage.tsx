@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@app/routes/path';
 import AdVideoPlayer from './components/AdVideoPlayer';
@@ -10,15 +10,15 @@ const ViewPage = () => {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleComplete = useCallback(() => {
-    navigate(paths.step4.complete);
-  }, [navigate]);
+  const { handleComplete, focus, containerRef } = useViewerGaze({
+    videoRef,
+    onComplete: () => navigate(paths.step4.complete),
+  });
 
   const { currentTime, totalDuration, progress, remain } = useVideoTimer(
     videoRef,
     handleComplete
   );
-  const { focus, containerRef } = useViewerGaze();
 
   return (
     <div
@@ -33,12 +33,7 @@ const ViewPage = () => {
         animation: 'fadeIn 0.4s ease',
       }}
     >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 860,
-        }}
-      >
+      <div style={{ width: '100%', maxWidth: 860 }}>
         <AdVideoPlayer
           containerRef={containerRef}
           videoRef={videoRef}
@@ -47,7 +42,6 @@ const ViewPage = () => {
           focus={focus}
           onEnded={handleComplete}
         />
-
         <ViewProgress progress={progress} remain={remain} />
       </div>
     </div>

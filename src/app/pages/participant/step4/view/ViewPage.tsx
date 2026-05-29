@@ -40,7 +40,7 @@ const ViewPage = () => {
           currentTime={currentTime}
           totalDuration={totalDuration}
           focus={focus}
-          onEnded={handleComplete}
+          onEnded={() => {}}
         />
         <ViewProgress progress={progress} remain={remain} />
       </div>

@@ -26,7 +26,7 @@ export const useViewerGaze = ({
   onComplete,
 }: UseViewerGazeOptions) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { gazeData, begin } = useGazer({ showVideo: true });
+  const { gazeData, begin } = useGazer({ showVideo: false });
 
   // 화면 표시용 trail (기존 유지)
   const [gazeTrail, setGazeTrail] = useState<GazePoint[]>([
@@ -37,8 +37,12 @@ export const useViewerGaze = ({
   // 전송용 버퍼 — 렌더 불필요하므로 ref
   const gazeBufferRef = useRef<RawGazePoint[]>([]);
   const sessionStartRef = useRef<number>(0);
+  const sessionStartedRef = useRef(false); // 중복 호출 방지
 
   useEffect(() => {
+    if (sessionStartedRef.current) return;
+    sessionStartedRef.current = true;
+
     sessionStartRef.current = Date.now();
     gazeBufferRef.current = [];
 
@@ -48,7 +52,6 @@ export const useViewerGaze = ({
 
     begin().then(() => {
       window.webgazer.removeMouseEventListeners();
-      window.webgazer.showVideoPreview(true);
     });
   }, [begin]);
 
@@ -99,9 +102,14 @@ export const useViewerGaze = ({
         start_time: sessionStartRef.current,
         data: gazeBufferRef.current,
       });
+    } catch (error) {
+      console.error('[gaze] 전송 실패:', error);
+    }
+
+    try {
       await postSessionStop({ ad_id: AD_ID });
     } catch (error) {
-      console.error('[session/gaze] 전송 실패:', error);
+      console.error('[session] stop 실패:', error);
     } finally {
       endWebGazer();
       onComplete();

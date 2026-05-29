@@ -9,8 +9,8 @@ import VideoPlaceholder from './VideoPlaceholder';
 import ViewTimer from './ViewTimer';
 
 type AdVideoPlayerProps = {
-  containerRef: RefObject<HTMLDivElement>;
-  videoRef: RefObject<HTMLVideoElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
+  videoRef: RefObject<HTMLVideoElement | null>;
   currentTime: number;
   totalDuration: number;
   focus: number;

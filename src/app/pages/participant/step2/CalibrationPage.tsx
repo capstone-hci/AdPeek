@@ -35,7 +35,8 @@ const CalibrationPage = () => {
   };
 
   const goNextExperimentStep = () => {
-    navigate(paths.home);
+    if (window.webgazer) window.webgazer.showVideoPreview(false);
+    navigate(paths.connection);
   };
 
   if (subStep === 0) {

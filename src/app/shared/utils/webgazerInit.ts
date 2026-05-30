@@ -9,6 +9,12 @@ export interface WebGazerInitOptions {
 let _webgazerStarted = false;
 
 export function initWebGazer(options: WebGazerInitOptions = {}): void {
+  if (!window.webgazer?.params) {
+    throw new Error(
+      'WebGazer is not loaded. Run pnpm dev/build to copy public/vendor/webgazer.js.'
+    );
+  }
+
   const {
     onGaze,
     showVideo = false,
@@ -20,7 +26,7 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
   window.webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
 
   window.webgazer
-    .setRegression('weightedRidge') // 최근 샘플에 더 높은 가중치 → 빠른 수렴
+    .setRegression('weightedRidge')
     .setTracker('TFFacemesh')
     .showVideoPreview(showVideo)
     .showPredictionPoints(showPredictionPoints)
@@ -31,8 +37,10 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
     window.webgazer.setGazeListener(onGaze);
   }
 
-  const style = document.createElement('style');
-  style.textContent = `
+  if (!document.querySelector('style[data-webgazer-layout="true"]')) {
+    const style = document.createElement('style');
+    style.dataset.webgazerLayout = 'true';
+    style.textContent = `
   #webgazerVideoFeed,
   #webgazerVideoContainer,
   #webgazerFaceOverlay,
@@ -44,11 +52,16 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
     height: 200px !important;
   }
 `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
+  }
 }
 
 export async function beginWebGazer(): Promise<void> {
   if (_webgazerStarted) return;
+  if (!window.webgazer) {
+    throw new Error('WebGazer is not loaded.');
+  }
+
   _webgazerStarted = true;
   await window.webgazer.begin();
 }
@@ -56,6 +69,7 @@ export async function beginWebGazer(): Promise<void> {
 export function destroyWebGazer(): void {
   if (!_webgazerStarted) return;
   if (!window.webgazer) return;
+
   try {
     window.webgazer.clearGazeListener();
   } catch (e) {
@@ -65,6 +79,7 @@ export function destroyWebGazer(): void {
 
 export function endWebGazer(): void {
   if (!window.webgazer) return;
+
   try {
     window.webgazer.clearGazeListener();
     window.webgazer.end();

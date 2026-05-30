@@ -3,8 +3,9 @@
  * ViewTimer 등 재생 시간 표시에 사용
  */
 export const formatTime = (sec: number) => {
-  const m = String(Math.floor(sec / 60)).padStart(2, '0');
-  const s = String(sec % 60).padStart(2, '0');
+  const totalSeconds = Math.floor(sec);
+  const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+  const s = String(totalSeconds % 60).padStart(2, '0');
 
   return `${m}:${s}`;
 };

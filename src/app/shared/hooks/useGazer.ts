@@ -73,12 +73,12 @@ export function useGazer({ showVideo = false }: UseGazerOptions = {}) {
 
   // 일시 중지 - 카메라는 유지, 콜백 호출만 멈춤
   const pause = useCallback(() => {
-    window.webgazer.pause();
+    window.webgazer?.pause();
     setIsRunning(false);
   }, []);
 
   const resume = useCallback(() => {
-    window.webgazer.resume();
+    window.webgazer?.resume();
     setIsRunning(true);
   }, []);
 

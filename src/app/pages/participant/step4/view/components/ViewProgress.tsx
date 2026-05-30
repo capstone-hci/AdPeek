@@ -36,7 +36,7 @@ const ViewProgress = ({ progress, remain }: ViewProgressProps) => (
       }}
     >
       <span>진행률 {Math.round(progress)}%</span>
-      <span>남은 시간: {remain}초</span>
+      <span>남은 시간: {Math.max(0, Math.ceil(remain))}초</span>
     </div>
   </>
 );

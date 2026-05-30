@@ -35,5 +35,5 @@ interface WebGazerInstance {
 }
 
 interface Window {
-  webgazer: WebGazerInstance;
+  webgazer?: WebGazerInstance;
 }

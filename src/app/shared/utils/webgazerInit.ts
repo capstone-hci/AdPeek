@@ -1,3 +1,5 @@
+import { ensureWebGazer } from './webgazerLoader';
+
 export interface WebGazerInitOptions {
   onGaze?: GazeListener;
   showVideo?: boolean;
@@ -8,7 +10,9 @@ export interface WebGazerInitOptions {
 
 let _webgazerStarted = false;
 
-export function initWebGazer(options: WebGazerInitOptions = {}): void {
+export async function initWebGazer(
+  options: WebGazerInitOptions = {}
+): Promise<void> {
   const {
     onGaze,
     showVideo = false,
@@ -17,10 +21,12 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
     applyKalmanFilter = false,
   } = options;
 
-  window.webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
+  const webgazer = await ensureWebGazer();
 
-  window.webgazer
-    .setRegression('weightedRidge') // 최근 샘플에 더 높은 가중치 → 빠른 수렴
+  webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
+
+  webgazer
+    .setRegression('weightedRidge')
     .setTracker('TFFacemesh')
     .showVideoPreview(showVideo)
     .showPredictionPoints(showPredictionPoints)
@@ -28,11 +34,13 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
     .applyKalmanFilter(applyKalmanFilter);
 
   if (onGaze) {
-    window.webgazer.setGazeListener(onGaze);
+    webgazer.setGazeListener(onGaze);
   }
 
-  const style = document.createElement('style');
-  style.textContent = `
+  if (!document.querySelector('style[data-webgazer-layout="true"]')) {
+    const style = document.createElement('style');
+    style.dataset.webgazerLayout = 'true';
+    style.textContent = `
   #webgazerVideoFeed,
   #webgazerVideoContainer,
   #webgazerFaceOverlay,
@@ -44,18 +52,22 @@ export function initWebGazer(options: WebGazerInitOptions = {}): void {
     height: 200px !important;
   }
 `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
+  }
 }
 
 export async function beginWebGazer(): Promise<void> {
   if (_webgazerStarted) return;
+
+  const webgazer = await ensureWebGazer();
   _webgazerStarted = true;
-  await window.webgazer.begin();
+  await webgazer.begin();
 }
 
 export function destroyWebGazer(): void {
   if (!_webgazerStarted) return;
   if (!window.webgazer) return;
+
   try {
     window.webgazer.clearGazeListener();
   } catch (e) {
@@ -65,6 +77,7 @@ export function destroyWebGazer(): void {
 
 export function endWebGazer(): void {
   if (!window.webgazer) return;
+
   try {
     window.webgazer.clearGazeListener();
     window.webgazer.end();

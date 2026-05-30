@@ -1,5 +1,3 @@
-import { ensureWebGazer } from './webgazerLoader';
-
 export interface WebGazerInitOptions {
   onGaze?: GazeListener;
   showVideo?: boolean;
@@ -10,9 +8,13 @@ export interface WebGazerInitOptions {
 
 let _webgazerStarted = false;
 
-export async function initWebGazer(
-  options: WebGazerInitOptions = {}
-): Promise<void> {
+export function initWebGazer(options: WebGazerInitOptions = {}): void {
+  if (!window.webgazer?.params) {
+    throw new Error(
+      'WebGazer is not loaded. Run pnpm dev/build to copy public/vendor/webgazer.js.'
+    );
+  }
+
   const {
     onGaze,
     showVideo = false,
@@ -21,11 +23,9 @@ export async function initWebGazer(
     applyKalmanFilter = false,
   } = options;
 
-  const webgazer = await ensureWebGazer();
+  window.webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
 
-  webgazer.params.faceMeshSolutionPath = '/mediapipe/face_mesh';
-
-  webgazer
+  window.webgazer
     .setRegression('weightedRidge')
     .setTracker('TFFacemesh')
     .showVideoPreview(showVideo)
@@ -34,7 +34,7 @@ export async function initWebGazer(
     .applyKalmanFilter(applyKalmanFilter);
 
   if (onGaze) {
-    webgazer.setGazeListener(onGaze);
+    window.webgazer.setGazeListener(onGaze);
   }
 
   if (!document.querySelector('style[data-webgazer-layout="true"]')) {
@@ -58,10 +58,12 @@ export async function initWebGazer(
 
 export async function beginWebGazer(): Promise<void> {
   if (_webgazerStarted) return;
+  if (!window.webgazer) {
+    throw new Error('WebGazer is not loaded.');
+  }
 
-  const webgazer = await ensureWebGazer();
   _webgazerStarted = true;
-  await webgazer.begin();
+  await window.webgazer.begin();
 }
 
 export function destroyWebGazer(): void {

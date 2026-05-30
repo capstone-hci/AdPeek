@@ -33,7 +33,7 @@ export function useGazer({ showVideo = false }: UseGazerOptions = {}) {
     // 이미 시작된 상태면 아무것도 하지 않는다
     if (isInitialized.current) return;
 
-    await initWebGazer({
+    initWebGazer({
       showVideo,
       onGaze: (data) => {
         // 얼굴이 감지되지 않을 때 무시

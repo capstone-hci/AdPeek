@@ -213,7 +213,7 @@ export function useCalibration(
     // 이전 세션 데이터가 남아있으면 회귀모델이 발산 → 항상 초기화
     if (window.webgazer) window.webgazer.clearData();
 
-    await initWebGazer({
+    initWebGazer({
       showVideo: true,
       saveDataAcrossSessions: false,
       applyKalmanFilter: false,

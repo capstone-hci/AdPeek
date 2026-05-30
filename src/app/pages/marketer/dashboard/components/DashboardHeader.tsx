@@ -1,9 +1,14 @@
 /**
- * components/DashboardHeader.tsx — 상단 제목·액션 영역.
+ * components/DashboardHeader.tsx — 상단 제목·상태 영역.
  */
 import { DASHBOARD_COPY } from '../constants/copy';
+import type { Campaign } from '../types/dashboard';
 
-const DashboardHeader = () => (
+type DashboardHeaderProps = {
+  campaign: Campaign;
+};
+
+const DashboardHeader = ({ campaign }: DashboardHeaderProps) => (
   <header
     style={{
       padding: '24px 36px',
@@ -15,8 +20,21 @@ const DashboardHeader = () => (
     }}
   >
     <div>
-      <div style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 4 }}>
-        {DASHBOARD_COPY.breadcrumb}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          fontSize: 12,
+          color: 'var(--text3)',
+          marginBottom: 4,
+        }}
+      >
+        <span>대시보드</span>
+        <span>›</span>
+        <span>광고 캠페인</span>
+        <span>›</span>
+        <span>{campaign.name}</span>
       </div>
       <h1
         style={{
@@ -25,18 +43,19 @@ const DashboardHeader = () => (
           letterSpacing: '-0.03em',
         }}
       >
-        {DASHBOARD_COPY.campaignTitle}
+        {campaign.title}
       </h1>
     </div>
 
     <span
       style={{
-        background: 'rgba(18, 183, 106, 0.12)',
+        background: 'var(--success-soft)',
         color: 'var(--success)',
         borderRadius: 6,
         padding: '5px 10px',
         fontSize: 12,
         fontWeight: 700,
+        letterSpacing: '-0.01em',
       }}
     >
       {DASHBOARD_COPY.statusComplete}

@@ -25,6 +25,8 @@
   --shadow-lg: 0 16px 48px rgba(25, 31, 40, 0.14);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --success: #12b76a;
+  --success-soft: rgba(18, 183, 106, 0.12);
+  --warn: #f59e0b;
   --danger: #f04452;
 }
 

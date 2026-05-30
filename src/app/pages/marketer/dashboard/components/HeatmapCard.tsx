@@ -15,6 +15,7 @@ type HeatmapCardProps = {
 const GRID_COLS = 3;
 const GRID_ROWS = 3;
 const GRID_LINE_COLOR = 'rgba(176, 184, 193, 0.55)';
+const FRAME_CONTENT_SCALE = 1.01;
 
 const HeatmapCard = ({ dashboard, isPending, isError }: HeatmapCardProps) => {
   const maxTime = dashboard ? getMaxSceneTime(dashboard) : 0;
@@ -54,103 +55,112 @@ const HeatmapCard = ({ dashboard, isPending, isError }: HeatmapCardProps) => {
           background: 'rgb(242,244,246)',
           borderRadius: 12,
           overflow: 'hidden',
+          border: `1px solid ${GRID_LINE_COLOR}`,
         }}
       >
         <div
-          aria-hidden
           style={{
             position: 'absolute',
             inset: 0,
-            boxShadow: `inset 0 0 0 1px ${GRID_LINE_COLOR}`,
-            backgroundImage: `
-              linear-gradient(to right, ${GRID_LINE_COLOR} 1px, transparent 1px),
-              linear-gradient(to bottom, ${GRID_LINE_COLOR} 1px, transparent 1px)
-            `,
-            backgroundSize: `${100 / GRID_COLS}% ${100 / GRID_ROWS}%`,
-            pointerEvents: 'none',
-            zIndex: 0,
+            transform: `scale(${FRAME_CONTENT_SCALE})`,
+            transformOrigin: 'center center',
           }}
-        />
-
-        {!dashboard && (
+        >
           <div
+            aria-hidden
             style={{
               position: 'absolute',
               inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'rgb(176,184,193)',
-              fontSize: 14,
-              fontWeight: 500,
+              backgroundImage: `
+                linear-gradient(to right, ${GRID_LINE_COLOR} 1px, transparent 1px),
+                linear-gradient(to bottom, ${GRID_LINE_COLOR} 1px, transparent 1px)
+              `,
+              backgroundSize: `${100 / GRID_COLS}% ${100 / GRID_ROWS}%`,
               pointerEvents: 'none',
-              zIndex: 1,
-            }}
-          >
-            {isPending
-              ? '히트맵 불러오는 중…'
-              : isError
-                ? '히트맵을 불러오지 못했습니다.'
-                : DASHBOARD_COPY.heatmap.frameLabel}
-          </div>
-        )}
-
-        {dashboard && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'rgb(176,184,193)',
-              fontSize: 14,
-              fontWeight: 500,
-              pointerEvents: 'none',
-              zIndex: 1,
-            }}
-          >
-            {DASHBOARD_COPY.heatmap.frameLabel}
-          </div>
-        )}
-
-        {dashboard && spots.length === 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'rgb(176,184,193)',
-              fontSize: 14,
-              fontWeight: 500,
-              pointerEvents: 'none',
-              zIndex: 2,
-            }}
-          >
-            시선 데이터가 없습니다.
-          </div>
-        )}
-
-        {spots.map((spot, index) => (
-          <div
-            key={index}
-            style={{
-              position: 'absolute',
-              left: spot.left,
-              top: spot.top,
-              width: spot.size,
-              height: spot.size,
-              transform: 'translate(-50%, -50%)',
-              borderRadius: '50%',
-              background: `radial-gradient(circle, ${spot.color} 0%, transparent 70%)`,
-              opacity: spot.opacity,
-              mixBlendMode: 'multiply',
-              zIndex: 3,
+              zIndex: 0,
             }}
           />
-        ))}
+
+          {!dashboard && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgb(176,184,193)',
+                fontSize: 14,
+                fontWeight: 500,
+                pointerEvents: 'none',
+                zIndex: 1,
+              }}
+            >
+              {isPending
+                ? '히트맵 불러오는 중…'
+                : isError
+                  ? '히트맵을 불러오지 못했습니다.'
+                  : DASHBOARD_COPY.heatmap.frameLabel}
+            </div>
+          )}
+
+          {dashboard && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgb(176,184,193)',
+                fontSize: 14,
+                fontWeight: 500,
+                pointerEvents: 'none',
+                zIndex: 1,
+              }}
+            >
+              {DASHBOARD_COPY.heatmap.frameLabel}
+            </div>
+          )}
+
+          {dashboard && spots.length === 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgb(176,184,193)',
+                fontSize: 14,
+                fontWeight: 500,
+                pointerEvents: 'none',
+                zIndex: 2,
+              }}
+            >
+              시선 데이터가 없습니다.
+            </div>
+          )}
+
+          {spots.map((spot, index) => (
+            <div
+              key={index}
+              style={{
+                position: 'absolute',
+                left: spot.left,
+                top: spot.top,
+                width: spot.size,
+                height: spot.size,
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '50%',
+                background: `radial-gradient(circle, ${spot.color} 0%, transparent 70%)`,
+                opacity: spot.opacity,
+                mixBlendMode: 'multiply',
+                zIndex: 3,
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div

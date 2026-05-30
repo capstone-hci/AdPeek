@@ -149,9 +149,9 @@ const EegTimelineCard = ({
               strokeWidth={1}
             />
 
-            {timeline.timeTicks.map((tick) => (
+            {timeline.timeTicks.map((tick, index) => (
               <text
-                key={tick.label}
+                key={`${tick.label}-${index}`}
                 x={tick.x}
                 y={168}
                 textAnchor={

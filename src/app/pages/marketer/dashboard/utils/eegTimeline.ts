@@ -9,6 +9,7 @@ const CHART = {
 
 const CHART_WIDTH = CHART.right - CHART.left;
 const CHART_HEIGHT = CHART.bottom - CHART.top;
+const TIME_TICK_INTERVAL_SEC = 5;
 
 type TimelineSeries = {
   path: string;
@@ -81,17 +82,50 @@ const buildPeakHighlight = (
   };
 };
 
+const buildTimeTicks = (maxTime: number) => {
+  if (maxTime <= 0) {
+    return [
+      {
+        time: 0,
+        x: CHART.left,
+        label: '0s',
+        anchor: 'start' as const,
+      },
+    ];
+  }
+
+  const endSec = Math.round(maxTime);
+  const tickSeconds: number[] = [];
+
+  for (let sec = 0; sec < endSec; sec += TIME_TICK_INTERVAL_SEC) {
+    tickSeconds.push(sec);
+  }
+
+  if (tickSeconds.at(-1) !== endSec) {
+    tickSeconds.push(endSec);
+  }
+
+  return tickSeconds.map((sec, index, arr) => {
+    const isFirst = index === 0;
+    const isLast = index === arr.length - 1;
+
+    return {
+      time: isLast ? maxTime : sec,
+      x: isLast ? CHART.right : CHART.left + (sec / maxTime) * CHART_WIDTH,
+      label: `${sec}s`,
+      anchor: (isFirst ? 'start' : isLast ? 'end' : 'middle') as
+        | 'start'
+        | 'middle'
+        | 'end',
+    };
+  });
+};
+
 export const buildEegTimeline = (scenes: DashboardScene[], maxTime: number) => {
   const attention = buildSeries(scenes, 'avg_attention', maxTime);
   const arousal = buildSeries(scenes, 'avg_arousal', maxTime);
   const peakHighlight = buildPeakHighlight(scenes, maxTime);
-
-  const timeTicks = [0, maxTime / 2, maxTime].map((time, index) => ({
-    time,
-    x: CHART.left + (time / maxTime) * CHART_WIDTH,
-    label: `${time.toFixed(0)}s`,
-    anchor: index === 0 ? 'start' : index === 2 ? 'end' : 'middle',
-  }));
+  const timeTicks = buildTimeTicks(maxTime);
 
   return {
     attention,

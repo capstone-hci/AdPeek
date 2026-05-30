@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: 'ko-KR'
+early_access: true
+
+tone_instructions: |
+  한국어(ko-KR)로 정중하고 협업적인 톤의 코드 리뷰를 제공합니다.
+  비판보다는 개선 방향을 제시하고, 이유가 명확한 피드백을 우선합니다.
+
+reviews:
+  profile: 'assertive'
+  high_level_summary: false
+  review_status: true
+  changed_files_summary: true
+  collapse_walkthrough: true
+  abort_on_close: true
+
+  path_filters:
+    - 'src/**'
+    - '.github/**'
+    - '.coderabbit.yaml'
+    - '!**/*.png'
+    - '!**/*.jpg'
+    - '!**/*.jpeg'
+    - '!**/*.svg'
+    - '!**/*.lock'
+    - '!dist/**'
+    - '!node_modules/**'
+
+  path_instructions:
+    - path: 'src/**'
+      instructions: |
+        [네이밍 규칙]
+        - 변수명, 함수명은 camelCase
+        - 컴포넌트명, 타입명, 인터페이스명은 PascalCase
+        - 상수는 UPPER_SNAKE_CASE
+        - 파일명은 컴포넌트는 PascalCase, 그 외는 camelCase
+
+        [컴포넌트 규칙]
+        - 함수형 컴포넌트만 사용
+        - props 타입은 interface로 정의
+        - 컴포넌트 파일과 동일한 이름으로 export
+
+        [React Hooks 규칙]
+        - hooks는 컴포넌트 최상단에서만 호출
+        - 커스텀 훅은 use 접두사 사용
+
+        [타입 규칙]
+        - any 사용 금지
+        - 명시적 타입 선언 권장
+
+        [폴더 구조 규칙]
+        - 프론트엔드 코드는 src/app 하위
+        - 데이터 처리 로직은 src/data 하위
+        - 공통 컴포넌트는 src/app/shared/components 하위
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - 'develop'
+      - 'main'
+    labels:
+      - '!wip'
+      - '!draft'
+      - '!skip-review'
+
+  tools:
+    gitleaks:
+      enabled: true
+    yamllint:
+      enabled: true
+
+chat:
+  art: false
+  auto_reply: true
+
+knowledge_base:
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns: []

@@ -1,0 +1,164 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+:root {
+  --bg: #f4f6f8;
+  --text: #191f28;
+  --text2: #4e5968;
+  --text3: #8b95a1;
+  --surface: #ffffff;
+  --border: rgba(25, 31, 40, 0.1);
+  --border2: rgba(25, 31, 40, 0.08);
+  --accent: #3182f6;
+  --accent-soft: rgba(49, 130, 246, 0.12);
+  --accent2: #7c5cbf;
+  --accent2-soft: rgba(124, 92, 191, 0.12);
+  --bg2: #eceef1;
+  --text4: #b0b8c1;
+  --shadow-xs: 0 1px 3px rgba(25, 31, 40, 0.08);
+  --shadow-lg: 0 16px 48px rgba(25, 31, 40, 0.14);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --success: #12b76a;
+  --success-soft: rgba(18, 183, 106, 0.12);
+  --warn: #f59e0b;
+  --danger: #f04452;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.12;
+    transform: scale(1.12);
+  }
+}
+
+@layer base {
+  html {
+    font-size: 62.5%;
+    font-family: var(--font-sans);
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  div,
+  span,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  em,
+  img,
+  ol,
+  ul,
+  li,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  footer,
+  header,
+  nav,
+  section,
+  figure,
+  figcaption,
+  audio,
+  video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+  }
+
+  blockquote,
+  q {
+    quotes: none;
+  }
+
+  blockquote::before,
+  blockquote::after,
+  q::before,
+  q::after {
+    content: '';
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    outline: none;
+  }
+}

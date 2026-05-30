@@ -33,7 +33,7 @@ export function useGazer({ showVideo = false }: UseGazerOptions = {}) {
     // 이미 시작된 상태면 아무것도 하지 않는다
     if (isInitialized.current) return;
 
-    initWebGazer({
+    await initWebGazer({
       showVideo,
       onGaze: (data) => {
         // 얼굴이 감지되지 않을 때 무시
@@ -73,12 +73,12 @@ export function useGazer({ showVideo = false }: UseGazerOptions = {}) {
 
   // 일시 중지 - 카메라는 유지, 콜백 호출만 멈춤
   const pause = useCallback(() => {
-    window.webgazer.pause();
+    window.webgazer?.pause();
     setIsRunning(false);
   }, []);
 
   const resume = useCallback(() => {
-    window.webgazer.resume();
+    window.webgazer?.resume();
     setIsRunning(true);
   }, []);
 

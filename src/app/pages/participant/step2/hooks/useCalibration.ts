@@ -175,7 +175,7 @@ export function useCalibration(
 
     // 클릭 시점부터 짧은 간격으로 여러 샘플 수집 (같은 주시 상태 유지 중)
     clickIntervalRef.current = setInterval(() => {
-      window.webgazer.recordScreenPosition(x, y, 'click');
+      window.webgazer?.recordScreenPosition(x, y, 'click');
       count += 1;
 
       if (count >= SAMPLES_PER_POINT) {
@@ -213,7 +213,7 @@ export function useCalibration(
     // 이전 세션 데이터가 남아있으면 회귀모델이 발산 → 항상 초기화
     if (window.webgazer) window.webgazer.clearData();
 
-    initWebGazer({
+    await initWebGazer({
       showVideo: true,
       saveDataAcrossSessions: false,
       applyKalmanFilter: false,
@@ -243,8 +243,8 @@ export function useCalibration(
     isInitialized.current = false;
     currentPointIndexRef.current = 0;
     lastGazeTime.current = 0;
-    window.webgazer.clearData();
-    start();
+    if (window.webgazer) window.webgazer.clearData();
+    void start();
   }, [clearClickInterval, start]);
 
   useEffect(() => {

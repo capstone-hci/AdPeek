@@ -51,7 +51,7 @@ export const useViewerGaze = ({
     );
 
     begin().then(() => {
-      window.webgazer.removeMouseEventListeners();
+      window.webgazer?.removeMouseEventListeners();
     });
   }, [begin]);
 

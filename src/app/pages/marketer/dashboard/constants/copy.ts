@@ -15,7 +15,7 @@ export const DASHBOARD_COPY = {
   heatmap: {
     title: '시선 히트맵',
     subtitle: '전체 참여자 평균 · 0–30s',
-    frameLabel: '광고 프레임',
+    frameLabel: '',
     legendLow: '낮음',
     legendHigh: '높음',
   },

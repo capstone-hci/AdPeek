@@ -5,7 +5,6 @@
  * 연동 후에는 광고 메타(ready의 `DUMMY_AD` 등)와 시청 세션 API 응답으로 대체합니다.
  *
  * @see useAdViewingTimer — 재생 시간·진행률·완료 처리
- * @see useGazeSimulation — 시선·EEG 집중도 초기값
  */
 export const VIEWING = {
   /** 광고 전체 길이(초). 타이머 종료·진행률·남은 시간 계산에 사용 */
@@ -17,9 +16,6 @@ export const VIEWING = {
    * 실제 연동 시에는 0 또는 서버의 `currentPosition` 등을 사용
    */
   initialTimeSeconds: 7,
-
-  /** EEG 집중도(%) 초기값. 이후 `useGazeSimulation`에서 주기적으로 갱신 */
-  initialFocus: 95,
 
   /**
    * 시선 좌표(%) 초기값. 영상 영역 기준 x/y (0~100).

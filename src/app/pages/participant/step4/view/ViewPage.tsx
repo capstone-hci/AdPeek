@@ -10,7 +10,7 @@ const ViewPage = () => {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { handleComplete, focus, containerRef } = useViewerGaze({
+  const { handleComplete, containerRef } = useViewerGaze({
     videoRef,
     onComplete: () => navigate(paths.step4.complete),
   });
@@ -39,7 +39,6 @@ const ViewPage = () => {
           videoRef={videoRef}
           currentTime={currentTime}
           totalDuration={totalDuration}
-          focus={focus}
           onEnded={() => {}}
         />
         <ViewProgress progress={progress} remain={remain} />

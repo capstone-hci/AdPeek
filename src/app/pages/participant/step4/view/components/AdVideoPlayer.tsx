@@ -1,9 +1,8 @@
 /**
  * components/AdVideoPlayer.tsx — 16:9 광고 영상 플레이어 컨테이너
- * 플레이스홀더·측정 배지·타이머·EEG 패널을 한 영역에 배치
+ * 플레이스홀더·측정 배지·타이머를 한 영역에 배치
  */
 import type { RefObject } from 'react';
-import EegFocusPanel from './EegFocusPanel';
 import RecordingBadge from './RecordingBadge';
 import VideoPlaceholder from './VideoPlaceholder';
 import ViewTimer from './ViewTimer';
@@ -13,7 +12,6 @@ type AdVideoPlayerProps = {
   videoRef: RefObject<HTMLVideoElement | null>;
   currentTime: number;
   totalDuration: number;
-  focus: number;
   onEnded: () => void;
 };
 
@@ -22,7 +20,6 @@ const AdVideoPlayer = ({
   videoRef,
   currentTime,
   totalDuration,
-  focus,
   onEnded,
 }: AdVideoPlayerProps) => (
   <div
@@ -40,7 +37,6 @@ const AdVideoPlayer = ({
     <VideoPlaceholder videoRef={videoRef} onEnded={onEnded} />
     <RecordingBadge />
     <ViewTimer currentTime={currentTime} totalDuration={totalDuration} />
-    <EegFocusPanel focus={focus} />
   </div>
 );
 

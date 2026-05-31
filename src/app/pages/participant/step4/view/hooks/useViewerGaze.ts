@@ -6,7 +6,6 @@ import {
   type RefObject,
 } from 'react';
 import { useGazer } from '@shared/hooks/useGazer';
-import { randomFocus } from '../utils/focus';
 import { appendGazePoint } from '../utils/gaze';
 import type { GazePoint, RawGazePoint } from '../types/gaze';
 import { VIEWING } from '../constants/viewing';
@@ -32,7 +31,6 @@ export const useViewerGaze = ({
   const [gazeTrail, setGazeTrail] = useState<GazePoint[]>([
     VIEWING.initialGaze,
   ]);
-  const [focus, setFocus] = useState(VIEWING.initialFocus);
 
   // 전송용 버퍼 — 렌더 불필요하므로 ref
   const gazeBufferRef = useRef<RawGazePoint[]>([]);
@@ -71,7 +69,6 @@ export const useViewerGaze = ({
     );
 
     setGazeTrail((prev) => appendGazePoint(prev, { x: xPct, y: yPct }));
-    setFocus(randomFocus());
 
     // 전송용: 0~1 정규화
     const x_norm = Math.min(
@@ -118,5 +115,5 @@ export const useViewerGaze = ({
 
   const currentGaze = gazeTrail[gazeTrail.length - 1];
 
-  return { gazeTrail, focus, currentGaze, containerRef, handleComplete };
+  return { gazeTrail, currentGaze, containerRef, handleComplete };
 };
